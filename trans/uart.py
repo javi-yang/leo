@@ -134,7 +134,7 @@ def func_004():
         
 def func_list():
 
-    with open('/home/javi/python/trans/cmd_list.txt', 'r') as f:
+    with open('/home/javi/leogit/trans/cmd_list.txt', 'r') as f:
         for line in f.readlines():
             ser_bt.write(line.encode())
     
