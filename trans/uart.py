@@ -13,6 +13,7 @@ ser = serial.Serial("/dev/ttyUSB0", 115200, timeout = 2)
 ser.flushInput()
 
 ser_bt = serial.Serial("/dev/rfcomm0", 115200, timeout = 5)
+#ser_bt = serial.Serial("/dev/ttyUSB1", 115200, timeout = 5)
 ser_bt.flushInput()
 
 data_bt = 1
@@ -225,6 +226,14 @@ def bt_trans():
             ser.write(" 0x".encode())
             ser.write(data_bt[7:9].encode())
             ser.write("\r\n".encode())
+        elif (data_bt[:3] == '031'):
+            with open('/home/javi/leogit/reg/reg_aout_Amp.txt','r') as f:
+                for data_reg in f.readlines():
+                    #data = data.strip('\n')
+                    if "i2cset" in data_reg:
+                        #print(data)
+                        ser.write(data_reg.encode())
+                        time.sleep(0.1)
         
         elif (data_bt[:3] == '051'):
             ser.write("CPU_Stress 70 1000\r\n".encode())
