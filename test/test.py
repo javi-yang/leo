@@ -3,7 +3,7 @@ with open('/home/javi/leo_share/reg00.txt','r') as f:
         #data = data.strip('\n')
         if "i2cset" in data:
             print(data)
-            with open('/home/javi/leo_share/test.txt','w') as r:
+            with open('/home/javi/leo_share/test.txt','a') as r:
                 r.write(data)
 '''
 import datetime
