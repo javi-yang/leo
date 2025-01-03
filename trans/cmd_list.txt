@@ -15,5 +15,7 @@
 0 011 aout AMP T01_MENUETTO
 0 012 aout ADZS T01_MENUETTO
 0 022 I2C SET
+0 031 register setting from txt (A2B AMP)
 0 051 CPU STRESS
 0 052 GPU STRESS
+0 071 tuner_out_Amp.sh

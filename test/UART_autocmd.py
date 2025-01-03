@@ -6,8 +6,9 @@ import serial
 import struct
 import time
 import RPi.GPIO as GPIO
+import datetime
 
-ser = serial.Serial("/dev/ttyUSB0", 115200, timeout = 2)
+ser = serial.Serial("/dev/ttyUSB1", 115200, timeout = 2 )
 ser.flushInput()
 
 channel_1 = 11
@@ -25,16 +26,20 @@ GPIO.add_event_detect(channel_1, GPIO.RISING, bouncetime = 1000)
 GPIO.add_event_detect(channel_2, GPIO.RISING, bouncetime = 1000)
 GPIO.add_event_detect(channel_3, GPIO.RISING, bouncetime = 1000)
 
+ct = 0
 
 def readback():
     while True:
         count = ser.inWaiting()
         
         if count != 0:
+
             data = ser.readline()
             data = data.strip()
             data = bytes.decode(data, errors="ignore")
             print(data)
+            time.sleep(0.1)
+
         else:
             break
         time.sleep(0.01)
@@ -105,20 +110,33 @@ def func_in():
 
 while True:
 
-    func_in()
+    ser.write("2\r\n".encode())
+    
+    ct += 1
+    if(ct == 30):
+        ser.write("2\r\n".encode())
+        ct = 0
     
     count = ser.inWaiting()    
     if count != 0:
+
         data = ser.readline()
         data = data.strip()
         data = bytes.decode(data, errors="ignore")
-        print(data)
-       
-        if data.find("lemans login:"):
-            pass
-        else:
-            time.sleep(2)
-            readback()
-            lemans_login()
+        if('13.VBUS Volatge Moniter AD value' in data):
+            current_datetime = datetime.datetime.now()
+            formatted_datetime = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+            print(formatted_datetime)
+            print(data)
 
-    time.sleep(0.01)
+        #readback()
+'''
+    else:
+        print('ERR!!!!!!!!!!!')
+    
+    time.sleep(2)
+    count = 0
+'''        
+       
+    
+    #time.sleep(0.01)

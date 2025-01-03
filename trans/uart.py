@@ -234,12 +234,21 @@ def bt_trans():
                         #print(data)
                         ser.write(data_reg.encode())
                         time.sleep(0.1)
+        elif (data_bt[:3] == '032'):
+            with open('/home/javi/leo_share/reg_set_a2b2.txt','r') as f:
+                for data_reg in f.readlines():
+                    #data = data.strip('\n')
+                    if "i2cset" in data_reg:
+                        #print(data)
+                        ser.write(data_reg.encode())
+                        time.sleep(0.1)
         
         elif (data_bt[:3] == '051'):
             ser.write("CPU_Stress 70 1000\r\n".encode())
         elif (data_bt[:3] == '052'):
             ser.write("GPU_Stress 70\r\n".encode())
-
+        elif (data_bt[:3] == '071'):
+            ser.write("tuner_out_Amp.sh\r\n".encode())
             
         elif (data_bt[:3] == '999'):
             GPIO.cleanup
@@ -285,3 +294,5 @@ while True:
 
 
     time.sleep(0.01)
+
+

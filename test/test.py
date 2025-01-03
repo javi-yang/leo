@@ -1,4 +1,5 @@
-with open('/home/javi/leo_share/reg00.txt','r') as f:
+with open('https://github.com/javi-yang/leo/blob/main/transcmd_list.txt','r') as f:
+#with open('/home/javi/leo_share/reg00.txt','r') as f:
     for data in f.readlines():
         #data = data.strip('\n')
         if "i2cset" in data:
