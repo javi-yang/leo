@@ -302,6 +302,8 @@ while True:
 
     #func_in()
     
+    #print("OKOKOK")
+
     bt_trans()
     
     count = ser.inWaiting()
