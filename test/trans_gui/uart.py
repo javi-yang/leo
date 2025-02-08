@@ -266,6 +266,12 @@ def on_switch_toggle():
     else:
         GPIO.output(7, 0)
 
+def on_enter_click():
+    data = entry.get()
+    ser.write(data.encode())
+    ser.write("\r\n".encode())
+    entry.delete(0, tk.END)
+
 def create_gui():
     # Create the main window
     root = tk.Tk()
@@ -283,6 +289,14 @@ def create_gui():
     switch_var = tk.IntVar()
     switch = tk.Checkbutton(root, text="GPIO7 Control", variable=switch_var, command=on_switch_toggle)
     switch.pack(pady=10)
+
+    # Create input field and ENTER button
+    global entry
+    entry = tk.Entry(root)
+    entry.pack(pady=10)
+    
+    enter_button = tk.Button(root, text="ENTER", command=on_enter_click)
+    enter_button.pack(pady=10)
 
     # Run the GUI event loop
     root.mainloop()
