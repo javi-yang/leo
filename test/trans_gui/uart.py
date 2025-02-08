@@ -38,12 +38,6 @@ GPIO.add_event_detect(channel_3, GPIO.RISING, bouncetime=1000)
 GPIO.setup(7, GPIO.OUT)
 # GPIO.output(7, 1)
 
-def lemans_login():
-    print("AUTO LOGIN >>>")
-    ser.write("root\r\n".encode())
-    time.sleep(1)
-    ser.write("oelinux123\r\n".encode())
-
 def readback():
     while True:
         count = ser.inWaiting()
@@ -57,6 +51,7 @@ def readback():
                 lemans_login()
             ser_bt.write("\n".encode())
             ser_bt.write(data.encode())
+            display_message(data)
         else:
             break
         time.sleep(0.01)
@@ -69,7 +64,11 @@ def wait_msg():
         if count != 0:
             break
 
-
+def lemans_login():
+    print("AUTO LOGIN >>>")
+    ser.write("root\r\n".encode())
+    time.sleep(1)
+    ser.write("oelinux123\r\n".encode())
 
 def test_cmd():
     print("TEST_CMD >>>")
@@ -296,6 +295,12 @@ def on_page_up(event=None):
         entry.delete(0, tk.END)
         entry.insert(0, last_messages[current_message_index])
 
+def display_message(message):
+    text_area.config(state=tk.NORMAL)
+    text_area.insert(tk.END, message + "\n")
+    text_area.see(tk.END)
+    text_area.config(state=tk.DISABLED)
+
 def create_gui():
     # Create the main window
     root = tk.Tk()
@@ -330,6 +335,11 @@ def create_gui():
     
     enter_button = tk.Button(root, text="ENTER", command=on_enter_click)
     enter_button.place(x=150, y=90, width=120, height=30)
+
+    # Create text area for displaying messages
+    global text_area
+    text_area = tk.Text(root, height=15, width=113, state=tk.DISABLED)
+    text_area.place(x=25, y=400, width=950, height=300)
 
     # Run the GUI event loop
     root.mainloop()
