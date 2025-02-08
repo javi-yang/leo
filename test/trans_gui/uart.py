@@ -5,6 +5,7 @@ ser.inWaiting()
 import threading
 import tkinter as tk
 from tkinter import messagebox
+from tkinter.scrolledtext import ScrolledText
 import serial
 import struct
 import time
@@ -300,6 +301,10 @@ def display_message(message):
     text_area.insert(tk.END, message + "\n")
     text_area.see(tk.END)
     text_area.config(state=tk.DISABLED)
+    # Limit the number of lines to 500
+    lines = text_area.get("1.0", tk.END).split("\n")
+    if len(lines) > 500:
+        text_area.delete("1.0", "2.0")
 
 def create_gui():
     # Create the main window
@@ -338,7 +343,7 @@ def create_gui():
 
     # Create text area for displaying messages
     global text_area
-    text_area = tk.Text(root, height=15, width=113, state=tk.DISABLED)
+    text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
     text_area.place(x=25, y=400, width=950, height=300)
 
     # Run the GUI event loop
@@ -363,7 +368,7 @@ while True:
     if count != 0:
         data = ser.readline()
         data = data.strip()
-        data = bytes.decode(data, errors="ignore")
+        data is bytes.decode(data, errors="ignore")
         print(data)
         if 'i2c_geni' in data:
             continue
