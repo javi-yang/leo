@@ -2,14 +2,15 @@
 ser.read(num)   
 ser.inWaiting()    
 '''
+import threading
+import tkinter as tk
+from tkinter import messagebox
 import serial
 import struct
 import time
 import os
 import RPi.GPIO as GPIO
 from datetime import datetime
-import tkinter as tk
-from tkinter import messagebox
 
 ser = serial.Serial("/dev/ttyUSB0", 115200, timeout = 2)
 ser.flushInput()
@@ -284,19 +285,25 @@ def on_button1_click():
 def on_button2_click():
     A2B_play()
 
-# Create the main window
-root = tk.Tk()
-root.title("UART Control")
+def create_gui():
+    # Create the main window
+    root = tk.Tk()
+    root.title("UART Control")
 
-# Create buttons
-button1 = tk.Button(root, text="Test Command", command=on_button1_click)
-button1.pack(pady=10)
+    # Create buttons
+    button1 = tk.Button(root, text="Test Command", command=on_button1_click)
+    button1.pack(pady=10)
 
-button2 = tk.Button(root, text="A2B Play", command=on_button2_click)
-button2.pack(pady=10)
+    button2 = tk.Button(root, text="A2B Play", command=on_button2_click)
+    button2.pack(pady=10)
 
-# Run the GUI event loop
-root.mainloop()
+    # Run the GUI event loop
+    root.mainloop()
+
+# Run the GUI in a separate thread
+gui_thread = threading.Thread(target=create_gui)
+gui_thread.daemon = True
+gui_thread.start()
 
 while True:
 
