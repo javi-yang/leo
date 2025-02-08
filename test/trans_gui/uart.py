@@ -38,6 +38,12 @@ GPIO.add_event_detect(channel_3, GPIO.RISING, bouncetime=1000)
 GPIO.setup(7, GPIO.OUT)
 # GPIO.output(7, 1)
 
+def lemans_login():
+    print("AUTO LOGIN >>>")
+    ser.write("root\r\n".encode())
+    time.sleep(1)
+    ser.write("oelinux123\r\n".encode())
+
 def readback():
     while True:
         count = ser.inWaiting()
@@ -47,6 +53,8 @@ def readback():
             data = data.strip()
             data = bytes.decode(data, errors="ignore")
             print(data)
+            if 'leamans login:' in data:
+                lemans_login()
             ser_bt.write("\n".encode())
             ser_bt.write(data.encode())
         else:
@@ -61,11 +69,7 @@ def wait_msg():
         if count != 0:
             break
 
-def lemans_login():
-    print("AUTO LOGIN >>>")
-    ser.write("root\r\n".encode())
-    time.sleep(1)
-    ser.write("oelinux123\r\n".encode())
+
 
 def test_cmd():
     print("TEST_CMD >>>")
@@ -338,8 +342,11 @@ gui_thread.start()
 while True:
     bt_trans()
     
-    count = ser.inWaiting()
-    
+    #count = ser.inWaiting()
+
+    readback()
+
+'''
     if data_bt == '004':
         func_004()
     
@@ -357,7 +364,7 @@ while True:
         else:
             readback()
             lemans_login()
-
+'''
     time.sleep(0.01)
 
 
