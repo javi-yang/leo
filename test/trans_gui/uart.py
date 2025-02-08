@@ -319,9 +319,9 @@ def create_gui():
     # Create input field and ENTER button
     global entry
     entry = tk.Entry(root)
-    entry.place(x=150, y=50, width=120, height=30)
+    entry.place(x=150, y=50, width=300, height=30)
     entry.bind("<Return>", on_enter_click)
-    entry.bind("<Prior>", on_page_up)  # Bind Page Up key to on_page_up function
+    entry.bind("<Up>", on_page_up)  # Bind Page Up key to on_page_up function
     
     enter_button = tk.Button(root, text="ENTER", command=on_enter_click)
     enter_button.place(x=150, y=90, width=120, height=30)
