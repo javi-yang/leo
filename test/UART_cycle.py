@@ -8,7 +8,7 @@ import time
 import RPi.GPIO as GPIO
 import datetime
 
-ser = serial.Serial("/dev/ttyUSB1", 115200, timeout = 2 )
+ser = serial.Serial("/dev/ttyUSB0", 115200, timeout = 2 )
 ser.flushInput()
 
 channel_1 = 11
@@ -109,33 +109,27 @@ def func_in():
 
 
 while True:
-
+    
+    readback()
+    
     ct += 1
 
-    if(ct == 30):
-        ser.write("2\r\n".encode())
+    if(ct == 3):
+        ser.write("888\r\n".encode())
         ct = 0
-        
+    time.sleep(2)
+    readback()
+    '''
     count = ser.inWaiting()    
     if count != 0:
 
         data = ser.readline()
         data = data.strip()
         data = bytes.decode(data, errors="ignore")
-        if('12.SWD S4A Power Monitor :' in data):
-            data_12 = data
-        if('13.VBUS Volatge Moniter AD value' in data):
-            current_datetime = datetime.datetime.now()
-            formatted_datetime = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
-            print(formatted_datetime)
-            print(data)
-            print(data_12)
-            vltg = data[35:40]
-            vltg = eval(vltg)
-            if(vltg < 1000 or vltg > 2000):
-                #print(vltg)
-                with open('/home/javi/leo_share/log.txt','a') as f:
-                    f.write(formatted_datetime+'\n'+data+'\n'+data_12+'\n')
+
+        print(data)
+    '''
+    time.sleep(2)
 '''
     else:
         print('ERR!!!!!!!!!!!')

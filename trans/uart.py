@@ -139,7 +139,12 @@ def func_list():
         for line in f.readlines():
             ser_bt.write(line.encode())
     
-    
+def log_trans():
+
+    with open('/home/javi/leo_share/log.txt', 'r') as f:
+        for line in f.readlines():
+            ser_bt.write(line.encode())
+        
 
 
 def bt_trans():
@@ -247,8 +252,15 @@ def bt_trans():
             ser.write("CPU_Stress 70 1000\r\n".encode())
         elif (data_bt[:3] == '052'):
             ser.write("GPU_Stress 70\r\n".encode())
+        elif (data_bt[:3] == '061'):
+            log_trans()
         elif (data_bt[:3] == '071'):
             ser.write("tuner_out_Amp.sh\r\n".encode())
+        elif (data_bt[:3] == '501'):
+            GPIO.output(7, 0)
+            time.sleep(0.3)
+            GPIO.output(7, 1)
+
             
         elif (data_bt[:3] == '999'):
             GPIO.cleanup
