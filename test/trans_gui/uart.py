@@ -296,6 +296,7 @@ def create_gui():
     # Create the main window
     root = tk.Tk()
     root.title("UART Control")
+    root.geometry("1000x700")  # Set default window size
 
     # Create buttons
     button1 = tk.Button(root, text="Test Command", command=on_button1_click)
