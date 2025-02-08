@@ -1,0 +1,41 @@
+    '''
+    ser_bt.write("\r\n".encode())
+    ser_bt.write("A: A2B play\r\n".encode())
+    ser_bt.write("B: TERMINAL\r\n".encode())
+    ser_bt.write("C: A2B record\r\n".encode())
+    ser_bt.write("D: I2C DETECT\r\n".encode())
+    ser_bt.write("P: I2C DUMP\r\n".encode())
+    ser_bt.write("R: reboot\r\n".encode())
+    ser_bt.write("U: USB device mode\r\n".encode())
+    ser_bt.write("001: TEST\r\n".encode())
+    ser_bt.write("002: I2C GET MANUAL -> DEVICE ADR\r\n".encode())
+    ser_bt.write("003: I2C GET AUTO 0x68 0x17\r\n".encode())
+    ser_bt.write("004: I2C GET cycle 0x68 0x17\r\n".encode())
+    ser_bt.write("005: GPIO_7 output\r\n".encode())
+    ser_bt.write("006: GPIO_7 interrupt\r\n".encode())
+    ser_bt.write("011: aout AMP T01_MENUETTO\r\n".encode())
+    ser_bt.write("012: aout ADZS T01_MENUETTO\r\n".encode())
+    now = datetime.now()
+    timestamp = now.timestamp()
+    print(timestamp)
+    ser_bt.write("\r\n".encode())
+    '''
+
+'''    
+def func_in():
+    if GPIO.input(channel_4):                  # HKP-WDT-OFF DOWN
+        if GPIO.event_detected(channel_1):
+            #lemans_login()
+            test_cmd()
+        if GPIO.event_detected(channel_2):
+            A2B_record()
+        if GPIO.event_detected(channel_3):
+            A2B_play()
+    else:
+        if GPIO.event_detected(channel_1):
+            I2C_dump()
+        if GPIO.event_detected(channel_2):
+            I2C_set()
+        if GPIO.event_detected(channel_3):
+            CAN_send()
+'''
