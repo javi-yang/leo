@@ -192,10 +192,10 @@ def bt_trans():
             ser.write("\r\n".encode())
         elif data_bt[:3] == '003':
             ser.write("i2cget -y -f 7 0x68 0x0d\r\n".encode())
-            ser.write("i2cget -y -f 7 0x68 0x65\r\n".encode())
-            ser.write("i2cget -y -f 7 0x68 0x66\r\n".encode())
-            ser.write("i2cget -y -f 7 0x68 0x67\r\n".encode())
-            ser.write("i2cget -y -f 7 0x68 0x68\r\n".encode())
+            ser.write("i2cget -y -f 7 0x65\r\n".encode())
+            ser.write("i2cget -y -f 7 0x66\r\n".encode())
+            ser.write("i2cget -y -f 7 0x67\r\n".encode())
+            ser.write("i2cget -y -f 7 0x68\r\n".encode())
         elif data_bt[:3] == '004':
             pass
         elif data_bt[:3] == '005':
@@ -272,10 +272,25 @@ def on_switch_toggle():
     else:
         GPIO.output(7, 0)
 
+last_messages = []
+current_message_index = -1
+
 def on_enter_click(event=None):
+    global last_messages, current_message_index
     data = entry.get()
     ser.write(data.encode() + "\r\n".encode())
+    last_messages.append(data)
+    if len(last_messages) > 10:
+        last_messages.pop(0)
+    current_message_index = -1
     entry.delete(0, tk.END)
+
+def on_page_up(event=None):
+    global current_message_index
+    if last_messages:
+        current_message_index = (current_message_index - 1) % len(last_messages)
+        entry.delete(0, tk.END)
+        entry.insert(0, last_messages[current_message_index])
 
 def create_gui():
     # Create the main window
@@ -306,6 +321,7 @@ def create_gui():
     entry = tk.Entry(root)
     entry.place(x=150, y=50, width=120, height=30)
     entry.bind("<Return>", on_enter_click)
+    entry.bind("<Prior>", on_page_up)  # Bind Page Up key to on_page_up function
     
     enter_button = tk.Button(root, text="ENTER", command=on_enter_click)
     enter_button.place(x=150, y=90, width=120, height=30)
