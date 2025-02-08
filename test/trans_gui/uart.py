@@ -260,6 +260,12 @@ def on_button1_click():
 def on_button2_click():
     A2B_play()
 
+def on_button3_click():
+    lemans_login()
+
+def on_button4_click():
+    A2B_record()
+
 def on_switch_toggle():
     if switch_var.get():
         GPIO.output(7, 1)
@@ -279,24 +285,30 @@ def create_gui():
 
     # Create buttons
     button1 = tk.Button(root, text="Test Command", command=on_button1_click)
-    button1.pack(pady=10)
+    button1.place(x=10, y=10, width=120, height=30)
 
     button2 = tk.Button(root, text="A2B Play", command=on_button2_click)
-    button2.pack(pady=10)
+    button2.place(x=10, y=50, width=120, height=30)
+
+    button3 = tk.Button(root, text="Lemans Login", command=on_button3_click)
+    button3.place(x=10, y=90, width=120, height=30)
+
+    button4 = tk.Button(root, text="A2B Record", command=on_button4_click)
+    button4.place(x=10, y=130, width=120, height=30)
 
     # Create switch
     global switch_var
     switch_var = tk.IntVar()
     switch = tk.Checkbutton(root, text="GPIO7 Control", variable=switch_var, command=on_switch_toggle)
-    switch.pack(pady=10)
+    switch.place(x=150, y=10, width=120, height=30)
 
     # Create input field and ENTER button
     global entry
     entry = tk.Entry(root)
-    entry.pack(pady=10)
+    entry.place(x=150, y=50, width=120, height=30)
     
     enter_button = tk.Button(root, text="ENTER", command=on_enter_click)
-    enter_button.pack(pady=10)
+    enter_button.place(x=150, y=90, width=120, height=30)
 
     # Run the GUI event loop
     root.mainloop()
