@@ -272,10 +272,9 @@ def on_switch_toggle():
     else:
         GPIO.output(7, 0)
 
-def on_enter_click():
+def on_enter_click(event=None):
     data = entry.get()
-    ser.write(data.encode())
-    ser.write("\r\n".encode())
+    ser.write(data.encode() + "\r\n".encode())
     entry.delete(0, tk.END)
 
 def create_gui():
@@ -306,6 +305,7 @@ def create_gui():
     global entry
     entry = tk.Entry(root)
     entry.place(x=150, y=50, width=120, height=30)
+    entry.bind("<Return>", on_enter_click)
     
     enter_button = tk.Button(root, text="ENTER", command=on_enter_click)
     enter_button.place(x=150, y=90, width=120, height=30)
