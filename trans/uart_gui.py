@@ -132,19 +132,14 @@ def log_trans():
                 ser_bt.write(line.encode())
 '''
 
-def on_switch_toggle():
-    if GPIO.input(7) == 1:
-        GPIO.output(7, 0)
-        switch_button.config(bg="orange", text="POWER ON")
-    else:
-        GPIO.output(7, 1)
-        switch_button.config(bg="SystemButtonFace", text="POWER OFF")
 
 def toggle_button_power():
     if button_power.config('bg')[-1] == 'orange':
-        button_power.config(bg="SystemButtonFace")
+        button_power.config(bg="gray")
+        GPIO.output(7, 1)
     else:
         button_power.config(bg="orange")
+        GPIO.output(7, 0)
 
 last_messages = []
 current_message_index = -1
@@ -198,12 +193,10 @@ def create_gui():
 
 
     # Create toggle button
-    global switch_button
-    switch_button = tk.Button(root, text="POWER OFF", command=on_switch_toggle)
-    switch_button.place(x=150, y=10, width=120, height=30)
 
+    global button_power
     button_power = tk.Button(root, text="POWER", command=toggle_button_power)
-    button_power.place(x=290, y=10, width=120, height=30)
+    button_power.place(x=150, y=10, width=120, height=30)
 
     # Create input field and ENTER button
     global entry
