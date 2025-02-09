@@ -13,21 +13,8 @@ import os
 import RPi.GPIO as GPIO
 from datetime import datetime
 
-def check_rfcomm0():
-    try:
-        ser_bt = serial.Serial("/dev/rfcomm0", 115200, timeout=5)
-        ser_bt.flushInput()
-        return ser_bt
-    except serial.SerialException as e:
-        print(f"Error: {e}")
-        return None
-
 ser = serial.Serial("/dev/ttyUSB0", 115200, timeout=2)
 ser.flushInput()
-
-ser_bt = check_rfcomm0()
-
-data_bt = 1
 
 channel_1 = 11
 channel_2 = 13
@@ -58,9 +45,6 @@ def readback():
             print(data)
             if 'leamans login:' in data:
                 lemans_login()
-            if ser_bt:
-                ser_bt.write("\n".encode())
-                ser_bt.write(data.encode())
             display_message(data)
         else:
             break
@@ -140,134 +124,14 @@ def func_004():
     time.sleep(0.5)
     ser.write("i2cget -y -f 7 0x68 0x17\r\n".encode())
 
-def func_list():
-    if ser_bt:
-        with open('/home/javi/leogit/trans/cmd_list.txt', 'r') as f:
-            for line in f.readlines():
-                ser_bt.write(line.encode())
-
+'''
 def log_trans():
     if ser_bt:
         with open('/home/javi/leo_share/log.txt', 'r') as f:
             for line in f.readlines():
                 ser_bt.write(line.encode())
+'''
 
-def bt_trans():
-    count_bt = ser_bt.inWaiting()
-    
-    global data_bt
-    
-    if count_bt != 0:
-        data_bt = ser_bt.readline()
-        data_bt = data_bt.strip()
-        data_bt = bytes.decode(data_bt, errors="ignore")
-        time.sleep(0.1)
-        print(">> BT RECEIVED: ", data_bt)
-        time.sleep(0.1)
-                   
-        cmd_len = len(data_bt)
-
-        if cmd_len == 1:
-            if 'A' in data_bt:
-                time.sleep(0.1)
-                A2B_play()
-                time.sleep(0.1)
-            if 'B' in data_bt:
-                terminal()
-            if 'C' in data_bt:
-                A2B_record()
-            if 'R' in data_bt:
-                time.sleep(1)
-                reboot()
-            if 'D' in data_bt:
-                time.sleep(0.1)
-                ser.write("i2cdetect -y -r 7\r\n".encode())
-            if 'P' in data_bt:
-                time.sleep(0.1)
-                I2C_dump()
-            if 'S' in data_bt:
-                time.sleep(0.1)
-                ser.write("stop_aout.sh\r\n".encode())
-            if 'U' in data_bt:
-                time.sleep(0.1)
-                ser.write("usb_device_mode.sh\r\n".encode())
-            if 'Z' in data_bt:
-                time.sleep(0.1)
-                func_list()
-
-        elif "001" in data_bt[:2]:
-            print(data_bt[3:])
-        elif data_bt[:3] == '001':
-            print(data_bt[3:])
-        elif data_bt[:3] == '002':
-            ser.write("i2cget -y -f 7 0x".encode())
-            ser.write(data_bt[3:5].encode())
-            ser.write(" 0x".encode())
-            ser.write(data_bt[5:7].encode())
-            ser.write("\r\n".encode())
-        elif data_bt[:3] == '003':
-            ser.write("i2cget -y -f 7 0x68 0x0d\r\n".encode())
-            ser.write("i2cget -y -f 7 0x65\r\n".encode())
-            ser.write("i2cget -y -f 7 0x66\r\n".encode())
-            ser.write("i2cget -y -f 7 0x67\r\n".encode())
-            ser.write("i2cget -y -f 7 0x68\r\n".encode())
-        elif data_bt[:3] == '004':
-            pass
-        elif data_bt[:3] == '005':
-            if data_bt[3:4] == '1':
-                GPIO.output(7, 1)
-            if data_bt[3:4] == '0':
-                GPIO.output(7, 0)
-        elif data_bt[:3] == '006':
-            GPIO.output(7, 1)
-            time.sleep(0.1)
-            GPIO.output(7, 0)
-        elif data_bt[:3] == '011':
-            ser.write("aout_a2b_Amp.sh T01_MENUETTO.wav\r\n".encode())
-        elif data_bt[:3] == '012':
-            ser.write("aout_a2b2.sh T01_MENUETTO.wav\r\n".encode())
-        elif data_bt[:3] == '022':
-            ser.write("i2cset -y -f 7 0x".encode())
-            ser.write(data_bt[3:5].encode())
-            ser.write(" 0x".encode())
-            ser.write(data_bt[5:7].encode())
-            ser.write(" 0x".encode())
-            ser.write(data_bt[7:9].encode())
-            ser.write("\r\n".encode())
-        elif data_bt[:3] == '031':
-            with open('/home/javi/leogit/reg/reg_aout_Amp.txt', 'r') as f:
-                for data_reg in f.readlines():
-                    if "i2cset" in data_reg:
-                        ser.write(data_reg.encode())
-                        time.sleep(0.1)
-        elif data_bt[:3] == '032':
-            with open('/home/javi/leo_share/reg_set_a2b2.txt', 'r') as f:
-                for data_reg in f.readlines():
-                    if "i2cset" in data_reg:
-                        ser.write(data_reg.encode())
-                        time.sleep(0.1)
-        elif data_bt[:3] == '051':
-            ser.write("CPU_Stress 70 1000\r\n".encode())
-        elif data_bt[:3] == '052':
-            ser.write("GPU_Stress 70\r\n".encode())
-        elif data_bt[:3] == '061':
-            log_trans()
-        elif data_bt[:3] == '071':
-            ser.write("tuner_out_Amp.sh\r\n".encode())
-        elif data_bt[:3] == '501':
-            GPIO.output(7, 0)
-            time.sleep(0.3)
-            GPIO.output(7, 1)
-        elif data_bt[:3] == '999':
-            GPIO.cleanup
-        else:
-            if "os" in data_bt[:2]:
-                os.system(data_bt[3:])
-            else:
-                ser.write(data_bt.encode())
-                ser.write("\r\n".encode())
-                
-        count_bt = 0
 
 def on_button1_click():
     test_cmd()
@@ -366,12 +230,11 @@ gui_thread.daemon = True
 gui_thread.start()
 
 while True:
-    bt_trans()
-    
+
     #count = ser.inWaiting()
 
     readback()
-
+    time.sleep(0.01)
 '''
     if data_bt == '004':
         func_004()
@@ -391,6 +254,6 @@ while True:
             readback()
             lemans_login()
 '''
-    time.sleep(0.01)
+
 
 
