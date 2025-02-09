@@ -190,7 +190,27 @@ def create_gui():
     button4 = tk.Button(root, text="A2B Record", command=A2B_record)
     button4.place(x=10, y=130, width=120, height=30)
 
+    button5 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button5.place(x=10, y=170, width=120, height=30)
 
+    button6 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button6.place(x=10, y=210, width=120, height=30)
+
+
+    button2 = tk.Button(root, text="Lemans Login", command=lemans_login)
+    button2.place(x=150, y=50, width=120, height=30)
+
+    button3 = tk.Button(root, text="A2B Play", command=A2B_play)
+    button3.place(x=150, y=90, width=120, height=30)
+
+    button4 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button4.place(x=150, y=130, width=120, height=30)
+
+    button5 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button5.place(x=150, y=170, width=120, height=30)
+
+    button6 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button6.place(x=150, y=210, width=120, height=30)
 
     # Create toggle button
 
@@ -201,12 +221,12 @@ def create_gui():
     # Create input field and ENTER button
     global entry
     entry = tk.Entry(root)
-    entry.place(x=150, y=50, width=300, height=30)
+    entry.place(x=10, y=250, width=500, height=30)
     entry.bind("<Return>", on_enter_click)
     entry.bind("<Up>", on_page_up)  # Bind Page Up key to on_page_up function
     
     enter_button = tk.Button(root, text="ENTER", command=on_enter_click)
-    enter_button.place(x=150, y=90, width=120, height=30)
+    enter_button.place(x=520, y=290, width=120, height=30)
 
     # Create text area for displaying messages
     global text_area
