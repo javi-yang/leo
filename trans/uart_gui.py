@@ -185,6 +185,13 @@ def on_page_up(event=None):
         entry.delete(0, tk.END)
         entry.insert(0, last_messages[current_message_index])
 
+def on_page_down(event=None):
+    global current_message_index
+    if last_messages:
+        current_message_index = (current_message_index + 1) % len(last_messages)
+        entry.delete(0, tk.END)
+        entry.insert(0, last_messages[current_message_index])
+
 def display_message(message):
     global filter1_active, filter1_text, filter2_active, filter2_text
     if filter1_active and filter1_text in message:
@@ -251,6 +258,7 @@ def create_gui():
     entry.place(x=10, y=370, width=600, height=30)
     entry.bind("<Return>", on_enter_click)
     entry.bind("<Up>", on_page_up)  # Bind Page Up key to on_page_up function
+    entry.bind("<Down>", on_page_down)  # Bind Page Down key to on_page_down function
     
     enter_button = tk.Button(root, text="ENTER", command=on_enter_click)
     enter_button.place(x=620, y=370, width=120, height=30)
