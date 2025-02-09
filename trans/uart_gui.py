@@ -1,6 +1,6 @@
 '''
-ser.read(num)   
-ser.inWaiting()    
+with Raspberry Pi 4B   
+    
 '''
 import threading
 import tkinter as tk
@@ -101,6 +101,9 @@ def CAN_send():
 def reboot():
     ser.write("reboot\r\n".encode())
 
+def usb_mode():
+    ser.write("usb_device_mode.sh\r\n".encode())
+
 def I2C_dump():
     ser.write("i2cdump -y -f 7 0x68\r\n".encode())
     time.sleep(0.2)
@@ -178,14 +181,14 @@ def on_enter_click(event=None):
     current_message_index = -1
     entry.delete(0, tk.END)
 
-def on_page_up(event=None):
+def on_key_up(event=None):
     global current_message_index
     if last_messages:
         current_message_index = (current_message_index - 1) % len(last_messages)
         entry.delete(0, tk.END)
         entry.insert(0, last_messages[current_message_index])
 
-def on_page_down(event=None):
+def on_key_down(event=None):
     global current_message_index
     if last_messages:
         current_message_index = (current_message_index + 1) % len(last_messages)
@@ -226,7 +229,7 @@ def create_gui():
     button4 = tk.Button(root, text="A2B Record", command=A2B_record)
     button4.place(x=10, y=190, width=200, height=50)
 
-    button5 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button5 = tk.Button(root, text="USB DSRC", command=usb_mode)
     button5.place(x=10, y=250, width=200, height=50)
 
     button6 = tk.Button(root, text="A2B Record", command=A2B_record)
@@ -257,8 +260,8 @@ def create_gui():
     entry = tk.Entry(root)
     entry.place(x=10, y=370, width=600, height=30)
     entry.bind("<Return>", on_enter_click)
-    entry.bind("<Up>", on_page_up)  # Bind Page Up key to on_page_up function
-    entry.bind("<Down>", on_page_down)  # Bind Page Down key to on_page_down function
+    entry.bind("<Up>", on_key_up)  # Bind Page Up key to on_key_up function
+    entry.bind("<Down>", on_key_down)  # Bind Page Down key to on_key_down function
     
     enter_button = tk.Button(root, text="ENTER", command=on_enter_click)
     enter_button.place(x=620, y=370, width=120, height=30)
@@ -268,7 +271,7 @@ def create_gui():
     filter1_entry = tk.Entry(root)
     filter1_entry.place(x=10, y=410, width=600, height=30)
     
-    filter1_button = tk.Button(root, text="FILTER1", command=toggle_filter1, bg="gray", activebackground="gray")
+    filter1_button = tk.Button(root, text="IGNORE", command=toggle_filter1, bg="gray", activebackground="gray")
     filter1_button.place(x=620, y=410, width=120, height=30)
 
     # Create filter2 input field and button
@@ -276,7 +279,7 @@ def create_gui():
     filter2_entry = tk.Entry(root)
     filter2_entry.place(x=10, y=450, width=600, height=30)
     
-    filter2_button = tk.Button(root, text="FILTER2", command=toggle_filter2, bg="gray", activebackground="gray")
+    filter2_button = tk.Button(root, text="REMAIN", command=toggle_filter2, bg="gray", activebackground="gray")
     filter2_button.place(x=620, y=450, width=120, height=30)
 
     # Create text area for displaying messages
