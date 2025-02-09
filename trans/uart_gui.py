@@ -132,7 +132,6 @@ def log_trans():
                 ser_bt.write(line.encode())
 '''
 
-
 def toggle_button_power():
     if button_power.config('bg')[-1] == 'orange':
         button_power.config(bg="gray", activebackground="gray")
@@ -175,63 +174,61 @@ def create_gui():
     # Create the main window
     root = tk.Tk()
     root.title("UART Control")
-    root.geometry("1000x700")  # Set default window size
+    root.geometry("1200x800")  # Set default window size
 
     # Create buttons
     button1 = tk.Button(root, text="Test Command", command=test_cmd)
-    button1.place(x=10, y=10, width=120, height=30)
+    button1.place(x=10, y=10, width=200, height=50)
 
     button2 = tk.Button(root, text="Lemans Login", command=lemans_login)
-    button2.place(x=10, y=50, width=120, height=30)
+    button2.place(x=10, y=70, width=200, height=50)
 
     button3 = tk.Button(root, text="A2B Play", command=A2B_play)
-    button3.place(x=10, y=90, width=120, height=30)
+    button3.place(x=10, y=130, width=200, height=50)
 
     button4 = tk.Button(root, text="A2B Record", command=A2B_record)
-    button4.place(x=10, y=130, width=120, height=30)
+    button4.place(x=10, y=190, width=200, height=50)
 
     button5 = tk.Button(root, text="A2B Record", command=A2B_record)
-    button5.place(x=10, y=170, width=120, height=30)
+    button5.place(x=10, y=250, width=200, height=50)
 
     button6 = tk.Button(root, text="A2B Record", command=A2B_record)
-    button6.place(x=10, y=210, width=120, height=30)
+    button6.place(x=10, y=310, width=200, height=50)
 
+    button7 = tk.Button(root, text="Lemans Login", command=lemans_login)
+    button7.place(x=220, y=70, width=200, height=50)
 
-    button2 = tk.Button(root, text="Lemans Login", command=lemans_login)
-    button2.place(x=150, y=50, width=120, height=30)
+    button8 = tk.Button(root, text="A2B Play", command=A2B_play)
+    button8.place(x=220, y=130, width=200, height=50)
 
-    button3 = tk.Button(root, text="A2B Play", command=A2B_play)
-    button3.place(x=150, y=90, width=120, height=30)
+    button9 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button9.place(x=220, y=190, width=200, height=50)
 
-    button4 = tk.Button(root, text="A2B Record", command=A2B_record)
-    button4.place(x=150, y=130, width=120, height=30)
+    button10 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button10.place(x=220, y=250, width=200, height=50)
 
-    button5 = tk.Button(root, text="A2B Record", command=A2B_record)
-    button5.place(x=150, y=170, width=120, height=30)
-
-    button6 = tk.Button(root, text="A2B Record", command=A2B_record)
-    button6.place(x=150, y=210, width=120, height=30)
+    button11 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button11.place(x=220, y=310, width=200, height=50)
 
     # Create toggle button
-
     global button_power
-    button_power = tk.Button(root, text="POWER", command=toggle_button_power)
-    button_power.place(x=150, y=10, width=120, height=30)
+    button_power = tk.Button(root, text="POWER", command=toggle_button_power, bg="gray", activebackground="gray")
+    button_power.place(x=220, y=10, width=200, height=50)
 
     # Create input field and ENTER button
     global entry
     entry = tk.Entry(root)
-    entry.place(x=10, y=250, width=500, height=30)
+    entry.place(x=10, y=370, width=600, height=30)
     entry.bind("<Return>", on_enter_click)
     entry.bind("<Up>", on_page_up)  # Bind Page Up key to on_page_up function
     
     enter_button = tk.Button(root, text="ENTER", command=on_enter_click)
-    enter_button.place(x=520, y=290, width=120, height=30)
+    enter_button.place(x=620, y=370, width=120, height=30)
 
     # Create text area for displaying messages
     global text_area
     text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
-    text_area.place(x=25, y=400, width=950, height=300)
+    text_area.place(x=25, y=420, width=1150, height=350)
 
     # Run the GUI event loop
     root.mainloop()
