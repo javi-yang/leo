@@ -37,18 +37,25 @@ GPIO.setup(7, GPIO.OUT)
 def readback():
     while True:
         count = ser.inWaiting()
-        
+        global serial_data
         if count != 0:
-            data = ser.readline()
-            data = data.strip()
-            data = bytes.decode(data, errors="ignore")
-            print(data)
-            if 'leamans login:' in data:
+            serial_data = ser.readline()
+            serial_data = serial_data.strip()
+            serial_data = bytes.decode(serial_data, errors="ignore")
+            print(serial_data)
+            if 'leamans login:' in serial_data:
                 lemans_login()
-            display_message(data)
+            disp_msg_filter()
+            display_message(serial_data)
         else:
             break
         time.sleep(0.01)
+
+def disp_msg_filter():
+    global filter_flg
+    filter_flg = 1
+    if filter_flg == 1:
+        serian_data = serial_data.replace('os', 'OS')
 
 def wait_msg():
     while True:
@@ -177,7 +184,7 @@ def create_gui():
     root.geometry("1200x800")  # Set default window size
 
     # Create buttons
-    button1 = tk.Button(root, text="Test Command", command=test_cmd)
+    button1 = tk.Button(root, text="REBOOT", command=reboot)
     button1.place(x=10, y=10, width=200, height=50)
 
     button2 = tk.Button(root, text="Lemans Login", command=lemans_login)
