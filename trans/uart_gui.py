@@ -140,6 +140,12 @@ def on_switch_toggle():
         GPIO.output(7, 1)
         switch_button.config(bg="SystemButtonFace", text="POWER OFF")
 
+def toggle_button_power():
+    if button_power.config('bg')[-1] == 'orange':
+        button_power.config(bg="SystemButtonFace")
+    else:
+        button_power.config(bg="orange")
+
 last_messages = []
 current_message_index = -1
 
@@ -189,10 +195,15 @@ def create_gui():
     button4 = tk.Button(root, text="A2B Record", command=A2B_record)
     button4.place(x=10, y=130, width=120, height=30)
 
+
+
     # Create toggle button
     global switch_button
     switch_button = tk.Button(root, text="POWER OFF", command=on_switch_toggle)
     switch_button.place(x=150, y=10, width=120, height=30)
+
+    button_power = tk.Button(root, text="POWER", command=toggle_button_power)
+    button_power.place(x=290, y=10, width=120, height=30)
 
     # Create input field and ENTER button
     global entry
