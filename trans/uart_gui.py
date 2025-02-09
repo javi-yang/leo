@@ -132,7 +132,6 @@ def log_trans():
                 ser_bt.write(line.encode())
 '''
 
-
 def on_button1_click():
     test_cmd()
 
@@ -147,9 +146,11 @@ def on_button4_click():
 
 def on_switch_toggle():
     if switch_var.get():
-        GPIO.output(7, 1)
-    else:
         GPIO.output(7, 0)
+        switch_button.config(bg="orange")
+    else:
+        GPIO.output(7, 1)
+        switch_button.config(bg="SystemButtonFace")
 
 last_messages = []
 current_message_index = -1
@@ -191,20 +192,21 @@ def create_gui():
     button1 = tk.Button(root, text="Test Command", command=on_button1_click)
     button1.place(x=10, y=10, width=120, height=30)
 
-    button2 = tk.Button(root, text="A2B Play", command=on_button2_click)
+    button2 = tk.Button(root, text="Lemans Login", command=on_button3_click)
     button2.place(x=10, y=50, width=120, height=30)
 
-    button3 = tk.Button(root, text="Lemans Login", command=on_button3_click)
+    button3 = tk.Button(root, text="A2B Play", command=on_button2_click)
     button3.place(x=10, y=90, width=120, height=30)
 
     button4 = tk.Button(root, text="A2B Record", command=on_button4_click)
     button4.place(x=10, y=130, width=120, height=30)
 
-    # Create switch
+    # Create toggle button
     global switch_var
     switch_var = tk.IntVar()
-    switch = tk.Checkbutton(root, text="GPIO7 Control", variable=switch_var, command=on_switch_toggle)
-    switch.place(x=150, y=10, width=120, height=30)
+    global switch_button
+    switch_button = tk.Checkbutton(root, text="POWER", variable=switch_var, command=on_switch_toggle)
+    switch_button.place(x=150, y=10, width=120, height=30)
 
     # Create input field and ENTER button
     global entry
@@ -230,30 +232,8 @@ gui_thread.daemon = True
 gui_thread.start()
 
 while True:
-
-    #count = ser.inWaiting()
-
     readback()
     time.sleep(0.01)
-'''
-    if data_bt == '004':
-        func_004()
-    
-    if count != 0:
-        data = ser.readline()
-        data = data.strip()
-        data is bytes.decode(data, errors="ignore")
-        print(data)
-        if 'i2c_geni' in data:
-            continue
-        ser_bt.write("\n".encode())
-        ser_bt.write(data.encode())
-        if data.find("lemans login:"):
-            pass
-        else:
-            readback()
-            lemans_login()
-'''
 
 
 
