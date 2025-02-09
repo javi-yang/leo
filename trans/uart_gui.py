@@ -34,28 +34,26 @@ GPIO.add_event_detect(channel_3, GPIO.RISING, bouncetime=1000)
 GPIO.setup(7, GPIO.OUT)
 # GPIO.output(7, 1)
 
+filter1_active = False
+filter1_text = ""
+filter2_active = False
+filter2_text = ""
+
 def readback():
     while True:
         count = ser.inWaiting()
-        global serial_data
+        
         if count != 0:
-            serial_data = ser.readline()
-            serial_data = serial_data.strip()
-            serial_data = bytes.decode(serial_data, errors="ignore")
-            print(serial_data)
-            if 'leamans login:' in serial_data:
+            data = ser.readline()
+            data = data.strip()
+            data = bytes.decode(data, errors="ignore")
+            print(data)
+            if 'leamans login:' in data:
                 lemans_login()
-            disp_msg_filter()
-            display_message(serial_data)
+            display_message(data)
         else:
             break
         time.sleep(0.01)
-
-def disp_msg_filter():
-    global filter_flg
-    filter_flg = 1
-    if filter_flg == 1:
-        serian_data = serial_data.replace('os', 'OS')
 
 def wait_msg():
     while True:
@@ -147,6 +145,26 @@ def toggle_button_power():
         button_power.config(bg="orange", activebackground="orange")
         GPIO.output(7, 0)
 
+def toggle_filter1():
+    global filter1_active, filter1_button, filter1_text
+    if filter1_button.config('bg')[-1] == 'orange':
+        filter1_button.config(bg="gray", activebackground="gray")
+        filter1_active = False
+    else:
+        filter1_button.config(bg="orange", activebackground="orange")
+        filter1_active = True
+        filter1_text = filter1_entry.get()
+
+def toggle_filter2():
+    global filter2_active, filter2_button, filter2_text
+    if filter2_button.config('bg')[-1] == 'orange':
+        filter2_button.config(bg="gray", activebackground="gray")
+        filter2_active = False
+    else:
+        filter2_button.config(bg="orange", activebackground="orange")
+        filter2_active = True
+        filter2_text = filter2_entry.get()
+
 last_messages = []
 current_message_index = -1
 
@@ -168,6 +186,11 @@ def on_page_up(event=None):
         entry.insert(0, last_messages[current_message_index])
 
 def display_message(message):
+    global filter1_active, filter1_text, filter2_active, filter2_text
+    if filter1_active and filter1_text in message:
+        return
+    if filter2_active and filter2_text not in message:
+        return
     text_area.config(state=tk.NORMAL)
     text_area.insert(tk.END, message + "\n")
     text_area.see(tk.END)
@@ -181,7 +204,7 @@ def create_gui():
     # Create the main window
     root = tk.Tk()
     root.title("UART Control")
-    root.geometry("1200x800")  # Set default window size
+    root.geometry("1200x900")  # Set default window size
 
     # Create buttons
     button1 = tk.Button(root, text="REBOOT", command=reboot)
@@ -232,10 +255,26 @@ def create_gui():
     enter_button = tk.Button(root, text="ENTER", command=on_enter_click)
     enter_button.place(x=620, y=370, width=120, height=30)
 
+    # Create filter1 input field and button
+    global filter1_entry, filter1_button
+    filter1_entry = tk.Entry(root)
+    filter1_entry.place(x=10, y=410, width=600, height=30)
+    
+    filter1_button = tk.Button(root, text="FILTER1", command=toggle_filter1, bg="gray", activebackground="gray")
+    filter1_button.place(x=620, y=410, width=120, height=30)
+
+    # Create filter2 input field and button
+    global filter2_entry, filter2_button
+    filter2_entry = tk.Entry(root)
+    filter2_entry.place(x=10, y=450, width=600, height=30)
+    
+    filter2_button = tk.Button(root, text="FILTER2", command=toggle_filter2, bg="gray", activebackground="gray")
+    filter2_button.place(x=620, y=450, width=120, height=30)
+
     # Create text area for displaying messages
     global text_area
     text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
-    text_area.place(x=25, y=420, width=1150, height=350)
+    text_area.place(x=25, y=500, width=1150, height=350)
 
     # Run the GUI event loop
     root.mainloop()
