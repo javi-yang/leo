@@ -132,25 +132,13 @@ def log_trans():
                 ser_bt.write(line.encode())
 '''
 
-def on_button1_click():
-    test_cmd()
-
-def on_button2_click():
-    A2B_play()
-
-def on_button3_click():
-    lemans_login()
-
-def on_button4_click():
-    A2B_record()
-
 def on_switch_toggle():
-    if switch_var.get():
+    if GPIO.input(7) == 1:
         GPIO.output(7, 0)
-        switch_button.config(bg="orange")
+        switch_button.config(bg="orange", text="POWER ON")
     else:
         GPIO.output(7, 1)
-        switch_button.config(bg="SystemButtonFace")
+        switch_button.config(bg="SystemButtonFace", text="POWER OFF")
 
 last_messages = []
 current_message_index = -1
@@ -189,23 +177,21 @@ def create_gui():
     root.geometry("1000x700")  # Set default window size
 
     # Create buttons
-    button1 = tk.Button(root, text="Test Command", command=on_button1_click)
+    button1 = tk.Button(root, text="Test Command", command=test_cmd)
     button1.place(x=10, y=10, width=120, height=30)
 
-    button2 = tk.Button(root, text="Lemans Login", command=on_button3_click)
+    button2 = tk.Button(root, text="Lemans Login", command=lemans_login)
     button2.place(x=10, y=50, width=120, height=30)
 
-    button3 = tk.Button(root, text="A2B Play", command=on_button2_click)
+    button3 = tk.Button(root, text="A2B Play", command=A2B_play)
     button3.place(x=10, y=90, width=120, height=30)
 
-    button4 = tk.Button(root, text="A2B Record", command=on_button4_click)
+    button4 = tk.Button(root, text="A2B Record", command=A2B_record)
     button4.place(x=10, y=130, width=120, height=30)
 
     # Create toggle button
-    global switch_var
-    switch_var = tk.IntVar()
     global switch_button
-    switch_button = tk.Checkbutton(root, text="POWER", variable=switch_var, command=on_switch_toggle)
+    switch_button = tk.Button(root, text="POWER OFF", command=on_switch_toggle)
     switch_button.place(x=150, y=10, width=120, height=30)
 
     # Create input field and ENTER button
