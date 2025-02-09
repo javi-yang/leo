@@ -135,10 +135,10 @@ def log_trans():
 
 def toggle_button_power():
     if button_power.config('bg')[-1] == 'orange':
-        button_power.config(bg="gray")
+        button_power.config(bg="gray", activebackground="gray")
         GPIO.output(7, 1)
     else:
-        button_power.config(bg="orange")
+        button_power.config(bg="orange", activebackground="orange")
         GPIO.output(7, 0)
 
 last_messages = []
