@@ -77,7 +77,7 @@ def test_cmd():
 def A2B_play():
     print("A2B PLAY START >>>")
     # ser.write("aout_a2b_Amp.sh\r\n".encode())
-    ser.write("aout_a2b2.sh\r\n".encode())
+    ser.write("aout_a2b2.sh T01_MENUETTO.wav\r\n".encode())
     readback()
     time.sleep(2)
     readback()
@@ -85,6 +85,11 @@ def A2B_play():
 def A2B_record():
     print("A2B RECORD START >>>")
     ser.write("arecord_a2b2.sh /home/root/Test_a2b2.wav\r\n".encode())
+    time.sleep(1)
+    
+def STOP_aout():
+    print("A2B STOP >>>")
+    ser.write("stop_a2b.sh\r\n".encode())
     time.sleep(1)
 
 def CAN_send():
@@ -232,7 +237,7 @@ def create_gui():
     button5 = tk.Button(root, text="USB DSRC", command=usb_mode)
     button5.place(x=10, y=250, width=200, height=50)
 
-    button6 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button6 = tk.Button(root, text="A2B STOP", command=STOP_aout)
     button6.place(x=10, y=310, width=200, height=50)
 
     button7 = tk.Button(root, text="Lemans Login", command=lemans_login)
