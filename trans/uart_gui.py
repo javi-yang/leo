@@ -153,6 +153,11 @@ def func_004():
     time.sleep(0.5)
     ser.write("i2cget -y -f 7 0x68 0x17\r\n".encode())
 
+def power_interrupt():
+    GPIO.output(7,1)
+    time.sleep(0.3)
+    GPIO.output(7,0)
+    
 '''
 def log_trans():
     if ser_bt:
@@ -264,7 +269,7 @@ def create_gui():
     button8 = tk.Button(root, text="A2B Play", command=A2B_play)
     button8.place(x=220, y=130, width=200, height=50)
 
-    button9 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button9 = tk.Button(root, text="PWER INTRPT", command=power_interrupt)
     button9.place(x=220, y=190, width=200, height=50)
 
     button10 = tk.Button(root, text="A2B Record", command=A2B_record)
