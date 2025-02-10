@@ -315,15 +315,15 @@ def create_gui():
     # Create interval time input field and button
     global interval_entry
     interval_entry = tk.Entry(root)
-    interval_entry.place(x=10, y=490, width=600, height=30)
+    interval_entry.place(x=760, y=370, width=100, height=30)
     
     interval_button = tk.Button(root, text="SET INTERVAL", command=update_interval_time, bg="gray", activebackground="gray")
-    interval_button.place(x=620, y=490, width=120, height=30)
+    interval_button.place(x=870, y=370, width=120, height=30)
 
     # Create text area for displaying messages
     global text_area
     text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
-    text_area.place(x=25, y=530, width=1150, height=350)
+    text_area.place(x=10, y=530, width=1180, height=350)
 
     # Run the GUI event loop
     root.mainloop()
