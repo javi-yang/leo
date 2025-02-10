@@ -81,6 +81,22 @@ def A2B_play():
     readback()
     time.sleep(2)
     readback()
+    
+def A2B_AMP_play():
+    print("A2B PLAY START >>>")
+    # ser.write("aout_a2b_Amp.sh\r\n".encode())
+    ser.write("aout_a2b_Amp.sh T01_MENUETTO.wav\r\n".encode())
+    readback()
+    time.sleep(2)
+    readback()
+    
+def A2B_USB_play():
+    print("A2B PLAY START >>>")
+    # ser.write("aout_a2b_Amp.sh\r\n".encode())
+    ser.write("aout_USB.sh testaudio.wav\r\n".encode())
+    readback()
+    time.sleep(2)
+    readback()
 
 def A2B_record():
     print("A2B RECORD START >>>")
@@ -222,6 +238,7 @@ def create_gui():
     root.geometry("1200x900")  # Set default window size
 
     # Create buttons
+    #lie 1
     button1 = tk.Button(root, text="REBOOT", command=reboot)
     button1.place(x=10, y=10, width=200, height=50)
 
@@ -231,16 +248,17 @@ def create_gui():
     button3 = tk.Button(root, text="A2B Play", command=A2B_play)
     button3.place(x=10, y=130, width=200, height=50)
 
-    button4 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button4 = tk.Button(root, text="A2B STOP", command=STOP_aout)
     button4.place(x=10, y=190, width=200, height=50)
 
     button5 = tk.Button(root, text="USB DSRC", command=usb_mode)
     button5.place(x=10, y=250, width=200, height=50)
 
-    button6 = tk.Button(root, text="A2B STOP", command=STOP_aout)
+    button6 = tk.Button(root, text="A2B Record", command=A2B_record)
     button6.place(x=10, y=310, width=200, height=50)
 
-    button7 = tk.Button(root, text="Lemans Login", command=lemans_login)
+    #line 2
+    button7 = tk.Button(root, text="A2B AMP", command=A2B_AMP_play)
     button7.place(x=220, y=70, width=200, height=50)
 
     button8 = tk.Button(root, text="A2B Play", command=A2B_play)
