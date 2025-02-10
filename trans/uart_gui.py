@@ -39,6 +39,8 @@ filter1_text = ""
 filter2_active = False
 filter2_text = ""
 
+interval_time = 0.3
+
 def readback():
     while True:
         count = ser.inWaiting()
@@ -155,16 +157,15 @@ def func_004():
 
 def power_interrupt():
     GPIO.output(7,1)
-    time.sleep(0.3)
+    time.sleep(interval_time)
     GPIO.output(7,0)
-    
-'''
-def log_trans():
-    if ser_bt:
-        with open('/home/javi/leo_share/log.txt', 'r') as f:
-            for line in f.readlines():
-                ser_bt.write(line.encode())
-'''
+
+def update_interval_time():
+    global interval_time
+    try:
+        interval_time = float(interval_entry.get())
+    except ValueError:
+        messagebox.showerror("Invalid Input", "Please enter a valid number for interval time.")
 
 def toggle_button_power():
     if button_power.config('bg')[-1] == 'orange':
@@ -310,10 +311,18 @@ def create_gui():
     filter2_button = tk.Button(root, text="REMAIN", command=toggle_filter2, bg="gray", activebackground="gray")
     filter2_button.place(x=620, y=450, width=120, height=30)
 
+    # Create interval time input field and button
+    global interval_entry
+    interval_entry = tk.Entry(root)
+    interval_entry.place(x=10, y=490, width=600, height=30)
+    
+    interval_button = tk.Button(root, text="SET INTERVAL", command=update_interval_time, bg="gray", activebackground="gray")
+    interval_button.place(x=620, y=490, width=120, height=30)
+
     # Create text area for displaying messages
     global text_area
     text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
-    text_area.place(x=25, y=500, width=1150, height=350)
+    text_area.place(x=25, y=530, width=1150, height=350)
 
     # Run the GUI event loop
     root.mainloop()
