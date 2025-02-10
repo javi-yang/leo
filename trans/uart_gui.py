@@ -317,7 +317,7 @@ def create_gui():
     interval_entry = tk.Entry(root)
     interval_entry.place(x=760, y=370, width=100, height=30)
     
-    interval_button = tk.Button(root, text="POWER INTVL", command=update_interval_time)
+    interval_button = tk.Button(root, text="SET INTERVAL", command=update_interval_time, bg="gray", activebackground="gray")
     interval_button.place(x=870, y=370, width=120, height=30)
 
     # Create text area for displaying messages
