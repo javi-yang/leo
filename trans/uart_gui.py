@@ -164,6 +164,7 @@ def update_interval_time():
     global interval_time
     try:
         interval_time = float(interval_entry.get())
+        power_interrupt()  # Call power_interrupt() after updating interval_time
     except ValueError:
         messagebox.showerror("Invalid Input", "Please enter a valid number for interval time.")
 
