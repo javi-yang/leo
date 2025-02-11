@@ -40,6 +40,7 @@ filter2_active = False
 filter2_text = ""
 
 interval_time = 0.3
+delay_time = 0
 
 def readback():
     while True:
@@ -168,7 +169,24 @@ def update_interval_time():
     except ValueError:
         messagebox.showerror("Invalid Input", "Please enter a valid number for interval time.")
 
+def update_delay_time():
+    global delay_time
+    try:
+        delay_time = float(delay_entry.get())
+        delay_button.config(bg="orange", activebackground="orange")
+    except ValueError:
+        messagebox.showerror("Invalid Input", "Please enter a valid number for delay time.")
+
+def delayed_action(action):
+    def wrapper():
+        time.sleep(delay_time)
+        action()
+    return wrapper
+
 def toggle_button_power():
+    delayed_action(_toggle_button_power)()
+
+def _toggle_button_power():
     if button_power.config('bg')[-1] == 'orange':
         button_power.config(bg="gray", activebackground="gray")
         GPIO.output(7, 1)
@@ -246,38 +264,38 @@ def create_gui():
 
     # Create buttons
     #lie 1
-    button1 = tk.Button(root, text="REBOOT", command=reboot)
+    button1 = tk.Button(root, text="REBOOT", command=delayed_action(reboot))
     button1.place(x=10, y=10, width=200, height=50)
 
-    button2 = tk.Button(root, text="Lemans Login", command=lemans_login)
+    button2 = tk.Button(root, text="Lemans Login", command=delayed_action(lemans_login))
     button2.place(x=10, y=70, width=200, height=50)
 
-    button3 = tk.Button(root, text="A2B Play", command=A2B_play)
+    button3 = tk.Button(root, text="A2B Play", command=delayed_action(A2B_play))
     button3.place(x=10, y=130, width=200, height=50)
 
-    button4 = tk.Button(root, text="A2B STOP", command=STOP_aout)
+    button4 = tk.Button(root, text="A2B STOP", command=delayed_action(STOP_aout))
     button4.place(x=10, y=190, width=200, height=50)
 
-    button5 = tk.Button(root, text="USB DSRC", command=usb_mode)
+    button5 = tk.Button(root, text="USB DSRC", command=delayed_action(usb_mode))
     button5.place(x=10, y=250, width=200, height=50)
 
-    button6 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button6 = tk.Button(root, text="A2B Record", command=delayed_action(A2B_record))
     button6.place(x=10, y=310, width=200, height=50)
 
     #line 2
-    button7 = tk.Button(root, text="A2B AMP", command=A2B_AMP_play)
+    button7 = tk.Button(root, text="A2B AMP", command=delayed_action(A2B_AMP_play))
     button7.place(x=220, y=70, width=200, height=50)
 
-    button8 = tk.Button(root, text="A2B Play", command=A2B_play)
+    button8 = tk.Button(root, text="A2B Play", command=delayed_action(A2B_play))
     button8.place(x=220, y=130, width=200, height=50)
 
-    button9 = tk.Button(root, text="PWER INTRPT", command=power_interrupt)
+    button9 = tk.Button(root, text="PWER INTRPT", command=delayed_action(power_interrupt))
     button9.place(x=220, y=190, width=200, height=50)
 
-    button10 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button10 = tk.Button(root, text="A2B Record", command=delayed_action(A2B_record))
     button10.place(x=220, y=250, width=200, height=50)
 
-    button11 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button11 = tk.Button(root, text="A2B Record", command=delayed_action(A2B_record))
     button11.place(x=220, y=310, width=200, height=50)
 
     # Create toggle button
@@ -288,13 +306,29 @@ def create_gui():
     # Create input field and ENTER button
     global entry
     entry = tk.Entry(root)
-    entry.place(x=10, y=370, width=600, height=30)
+    entry.place(x=10, y=370, width=400, height=30)
     entry.bind("<Return>", on_enter_click)
     entry.bind("<Up>", on_key_up)  # Bind Page Up key to on_key_up function
     entry.bind("<Down>", on_key_down)  # Bind Page Down key to on_key_down function
     
     enter_button = tk.Button(root, text="ENTER", command=on_enter_click)
-    enter_button.place(x=620, y=370, width=120, height=30)
+    enter_button.place(x=420, y=370, width=120, height=30)
+
+    # Create interval time input field and button
+    global interval_entry
+    interval_entry = tk.Entry(root)
+    interval_entry.place(x=550, y=370, width=100, height=30)
+    
+    interval_button = tk.Button(root, text="SET INTERVAL", command=update_interval_time, bg="gray", activebackground="gray")
+    interval_button.place(x=660, y=370, width=120, height=30)
+
+    # Create delay time input field and button
+    global delay_entry, delay_button
+    delay_entry = tk.Entry(root)
+    delay_entry.place(x=790, y=370, width=100, height=30)
+    
+    delay_button = tk.Button(root, text="SET DELAY", command=update_delay_time, bg="gray", activebackground="gray")
+    delay_button.place(x=900, y=370, width=120, height=30)
 
     # Create filter1 input field and button
     global filter1_entry, filter1_button
@@ -312,18 +346,10 @@ def create_gui():
     filter2_button = tk.Button(root, text="REMAIN", command=toggle_filter2, bg="gray", activebackground="gray")
     filter2_button.place(x=620, y=450, width=120, height=30)
 
-    # Create interval time input field and button
-    global interval_entry
-    interval_entry = tk.Entry(root)
-    interval_entry.place(x=760, y=370, width=100, height=30)
-    
-    interval_button = tk.Button(root, text="SET INTERVAL", command=update_interval_time, bg="gray", activebackground="gray")
-    interval_button.place(x=870, y=370, width=120, height=30)
-
     # Create text area for displaying messages
     global text_area
     text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
-    text_area.place(x=10, y=530, width=1180, height=350)
+    text_area.place(x=10, y=490, width=1180, height=350)
 
     # Run the GUI event loop
     root.mainloop()
