@@ -277,43 +277,43 @@ def create_gui():
 
     # Create buttons
     #lie 1
-    button1 = tk.Button(root, text="REBOOT", command=lambda: delayed_action(reboot)())
+    button1 = tk.Button(root, text="REBOOT", command=delayed_action(reboot))
     button1.place(x=10, y=10, width=200, height=50)
 
-    button2 = tk.Button(root, text="Lemans Login", command=lambda: delayed_action(lemans_login)())
+    button2 = tk.Button(root, text="Lemans Login", command=delayed_action(lemans_login))
     button2.place(x=10, y=70, width=200, height=50)
 
-    button3 = tk.Button(root, text="A2B Play", command=lambda: delayed_action(A2B_play)())
+    button3 = tk.Button(root, text="A2B Play", command=delayed_action(A2B_play))
     button3.place(x=10, y=130, width=200, height=50)
 
-    button4 = tk.Button(root, text="A2B STOP", command=lambda: delayed_action(STOP_aout)())
+    button4 = tk.Button(root, text="A2B STOP", command=delayed_action(STOP_aout))
     button4.place(x=10, y=190, width=200, height=50)
 
-    button5 = tk.Button(root, text="USB DSRC", command=lambda: delayed_action(usb_mode)())
+    button5 = tk.Button(root, text="USB DSRC", command=delayed_action(usb_mode))
     button5.place(x=10, y=250, width=200, height=50)
 
-    button6 = tk.Button(root, text="A2B Record", command=lambda: delayed_action(A2B_record)())
+    button6 = tk.Button(root, text="A2B Record", command=delayed_action(A2B_record))
     button6.place(x=10, y=310, width=200, height=50)
 
     #line 2
-    button7 = tk.Button(root, text="A2B AMP", command=lambda: delayed_action(A2B_AMP_play)())
+    button7 = tk.Button(root, text="A2B AMP", command=delayed_action(A2B_AMP_play))
     button7.place(x=220, y=70, width=200, height=50)
 
-    button8 = tk.Button(root, text="Reserved", command=lambda: delayed_action(A2B_play)())
+    button8 = tk.Button(root, text="Reserved", command=delayed_action(A2B_play))
     button8.place(x=220, y=130, width=200, height=50)
 
-    button9 = tk.Button(root, text="PWER INTRPT", command=lambda: delayed_action(power_interrupt)())
+    button9 = tk.Button(root, text="PWER INTRPT", command=delayed_action(power_interrupt))
     button9.place(x=220, y=190, width=200, height=50)
 
-    button10 = tk.Button(root, text="CAN SEND", command=lambda: delayed_action(CAN_send)())
+    button10 = tk.Button(root, text="CAN SEND", command=delayed_action(CAN_send))
     button10.place(x=220, y=250, width=200, height=50)
 
-    button11 = tk.Button(root, text="Reserved", command=lambda: delayed_action(A2B_record)())
+    button11 = tk.Button(root, text="Reserved", command=delayed_action(A2B_record))
     button11.place(x=220, y=310, width=200, height=50)
 
     # Create toggle button
     global button_power
-    button_power = tk.Button(root, text="POWER", command=lambda: delayed_action(toggle_button_power)(), bg="gray", activebackground="gray")
+    button_power = tk.Button(root, text="POWER", command=toggle_button_power, bg="gray", activebackground="gray")
     button_power.place(x=220, y=10, width=200, height=50)
 
     # Create input field and ENTER button
@@ -346,18 +346,18 @@ def create_gui():
     # Create filter1 input field and button
     global filter1_entry, filter1_button
     filter1_entry = tk.Entry(root)
-    filter1_entry.place(x=10, y=450, width=600, height=30)
+    filter1_entry.place(x=10, y=410, width=600, height=30)
     
     filter1_button = tk.Button(root, text="IGNORE", command=toggle_filter1, bg="gray", activebackground="gray")
-    filter1_button.place(x=620, y=450, width=120, height=30)
+    filter1_button.place(x=620, y=410, width=120, height=30)
 
     # Create filter2 input field and button
     global filter2_entry, filter2_button
     filter2_entry = tk.Entry(root)
-    filter2_entry.place(x=10, y=490, width=600, height=30)
+    filter2_entry.place(x=10, y=450, width=600, height=30)
     
     filter2_button = tk.Button(root, text="REMAIN", command=toggle_filter2, bg="gray", activebackground="gray")
-    filter2_button.place(x=620, y=490, width=120, height=30)
+    filter2_button.place(x=620, y=450, width=120, height=30)
 
     # Create text area for displaying messages
     global text_area
