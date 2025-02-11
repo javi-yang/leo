@@ -111,6 +111,9 @@ def STOP_aout():
     time.sleep(1)
 
 def CAN_send():
+    ser.write("echo -e \"0,1,2,3,4,5,6,7,8,9,0,0,0,0,0,0\">/tmp/can_write.txt\r\n".encode())
+    ser.write("CAN_Message_Send\r\n".encode())
+'''
     while True:
         ser.write("echo -e \"0,1,2,3,4,5,6,7,8,9,0,0,0,0,0,0\">/tmp/can_write.txt\r\n".encode())
         ser.write("CAN_Message_Send\r\n".encode())
@@ -120,7 +123,7 @@ def CAN_send():
         if GPIO.event_detected(channel_3):
             print("***CAN cycle stop***")
             break
-
+'''
 def reboot():
     ser.write("reboot\r\n".encode())
 
