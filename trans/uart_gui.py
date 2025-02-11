@@ -41,7 +41,6 @@ filter2_text = ""
 
 interval_time = 0.3
 delay_time = 0
-delay_active = False
 
 def readback():
     while True:
@@ -171,18 +170,16 @@ def update_interval_time():
         messagebox.showerror("Invalid Input", "Please enter a valid number for interval time.")
 
 def update_delay_time():
-    global delay_time, delay_active
+    global delay_time
     try:
         delay_time = float(delay_entry.get())
-        delay_active = True
         delay_button.config(bg="orange", activebackground="orange")
     except ValueError:
         messagebox.showerror("Invalid Input", "Please enter a valid number for delay time.")
 
 def delayed_action(action):
     def wrapper():
-        if delay_active:
-            time.sleep(delay_time)
+        time.sleep(delay_time)
         action()
     return wrapper
 
@@ -216,15 +213,6 @@ def toggle_filter2():
         filter2_button.config(bg="orange", activebackground="orange")
         filter2_active = True
         filter2_text = filter2_entry.get()
-
-def toggle_delay():
-    global delay_active
-    if delay_button.config('bg')[-1] == 'orange':
-        delay_button.config(bg="gray", activebackground="gray")
-        delay_active = False
-    else:
-        delay_button.config(bg="orange", activebackground="orange")
-        delay_active = True
 
 last_messages = []
 current_message_index = -1
@@ -339,7 +327,7 @@ def create_gui():
     delay_entry = tk.Entry(root)
     delay_entry.place(x=790, y=370, width=100, height=30)
     
-    delay_button = tk.Button(root, text="SET DELAY", command=toggle_delay, bg="gray", activebackground="gray")
+    delay_button = tk.Button(root, text="SET DELAY", command=update_delay_time, bg="gray", activebackground="gray")
     delay_button.place(x=900, y=370, width=120, height=30)
 
     # Create filter1 input field and button
