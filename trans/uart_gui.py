@@ -274,7 +274,7 @@ def create_gui():
     button9 = tk.Button(root, text="PWER INTRPT", command=power_interrupt)
     button9.place(x=220, y=190, width=200, height=50)
 
-    button10 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button10 = tk.Button(root, text="CAN SEND", command=CAN_send)
     button10.place(x=220, y=250, width=200, height=50)
 
     button11 = tk.Button(root, text="A2B Record", command=A2B_record)
