@@ -172,14 +172,11 @@ def update_interval_time():
         messagebox.showerror("Invalid Input", "Please enter a valid number for interval time.")
 
 def toggle_button_power():
-    global interval_time
     if button_power.config('bg')[-1] == 'orange':
         button_power.config(bg="gray", activebackground="gray")
-        time.sleep(interval_time)
         GPIO.output(7, 1)
     else:
         button_power.config(bg="orange", activebackground="orange")
-        time.sleep(interval_time)
         GPIO.output(7, 0)
 
 def toggle_filter1():
