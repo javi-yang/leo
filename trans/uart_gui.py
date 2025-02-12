@@ -318,13 +318,13 @@ def create_gui():
     # Create input field and ENTER button
     global entry
     entry = tk.Entry(root)
-    entry.place(x=10, y=370, width=600, height=30)
+    entry.place(x=10, y=490, width=600, height=30)
     entry.bind("<Return>", on_enter_click)
     entry.bind("<Up>", on_key_up)  # Bind Page Up key to on_key_up function
     entry.bind("<Down>", on_key_down)  # Bind Page Down key to on_key_down function
     
     enter_button = tk.Button(root, text="ENTER", command=on_enter_click)
-    enter_button.place(x=620, y=370, width=120, height=30)
+    enter_button.place(x=620, y=490, width=120, height=30)
 
     # Create filter1 input field and button
     global filter1_entry, filter1_button
@@ -345,10 +345,10 @@ def create_gui():
     # Create interval time input field and button
     global interval_entry
     interval_entry = tk.Entry(root)
-    interval_entry.place(x=760, y=370, width=100, height=30)
+    interval_entry.place(x=10, y=370, width=100, height=30)
     
     interval_button = tk.Button(root, text="INTERVAL", command=update_interval_time, bg="gray", activebackground="gray")
-    interval_button.place(x=870, y=370, width=100, height=30)
+    interval_button.place(x=120, y=370, width=100, height=30)
 
     # Create text area for displaying messages
     global text_area
