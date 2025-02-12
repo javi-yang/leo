@@ -50,7 +50,7 @@ def readback():
             data = data.strip()
             data = bytes.decode(data, errors="ignore")
             print(data)
-            if 'leamans login:' in data:
+            if 'lemans login:' in data:
                 lemans_login()
             display_message(data)
         else:
@@ -169,9 +169,17 @@ def update_interval_time():
         interval_time = float(interval_entry.get())
         power_interrupt()  # Call power_interrupt() after updating interval_time
     except ValueError:
-        messagebox.showerror("Invalid Input", "Please enter a valid number for interval time.")
+        messagebox.showerror("数呢哥们？", "你得输个数.")
 
 def toggle_button_power():
+    if button_power.config('bg')[-1] == 'orange':
+        button_power.config(bg="gray", activebackground="gray")
+        GPIO.output(7, 1)
+    else:
+        button_power.config(bg="orange", activebackground="orange")
+        GPIO.output(7, 0)
+
+def toggle_button_reserve():
     if button_power.config('bg')[-1] == 'orange':
         button_power.config(bg="gray", activebackground="gray")
         GPIO.output(7, 1)
@@ -283,10 +291,30 @@ def create_gui():
     button11 = tk.Button(root, text="A2B Record", command=A2B_record)
     button11.place(x=220, y=310, width=200, height=50)
 
+    #line 3
+    button12 = tk.Button(root, text="I2C DUMP", command=I2C_dump)
+    button12.place(x=430, y=70, width=200, height=50)
+
+    button13 = tk.Button(root, text="I2C SET", command=I2C_set)
+    button13.place(x=430, y=130, width=200, height=50)
+
+    button14 = tk.Button(root, text="FUNC 002", command=func_002)
+    button14.place(x=430, y=190, width=200, height=50)
+
+    button15 = tk.Button(root, text="FUNC 004", command=func_004)
+    button15.place(x=430, y=250, width=200, height=50)
+
+    button16 = tk.Button(root, text="TERMINAL", command=terminal)
+    button16.place(x=430, y=310, width=200, height=50)
+
     # Create toggle button
     global button_power
     button_power = tk.Button(root, text="POWER", command=toggle_button_power, bg="gray", activebackground="gray")
     button_power.place(x=220, y=10, width=200, height=50)
+
+    global button_reserve
+    button_reserve = tk.Button(root, text="RESERVE", command=toggle_button_reserve, bg="gray", activebackground="gray")
+    button_reserve.place(x=430, y=10, width=200, height=50)
 
     # Create input field and ENTER button
     global entry
@@ -320,7 +348,7 @@ def create_gui():
     interval_entry = tk.Entry(root)
     interval_entry.place(x=760, y=370, width=100, height=30)
     
-    interval_button = tk.Button(root, text="SET INTERVAL", command=update_interval_time, bg="gray", activebackground="gray")
+    interval_button = tk.Button(root, text="INTERVAL", command=update_interval_time, bg="gray", activebackground="gray")
     interval_button.place(x=870, y=370, width=120, height=30)
 
     # Create text area for displaying messages
