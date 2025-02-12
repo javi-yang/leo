@@ -34,7 +34,7 @@ GPIO.add_event_detect(channel_3, GPIO.RISING, bouncetime=1000)
 GPIO.setup(7, GPIO.OUT)
 # GPIO.output(7, 1)
 
-filter1_active = False
+filter1_active = True
 filter1_text = ""
 filter2_active = False
 filter2_text = ""
@@ -55,7 +55,6 @@ def readback():
             display_message(data)
         else:
             break
-        time.sleep(0.01)
 
 def wait_msg():
     while True:
@@ -332,7 +331,7 @@ def create_gui():
     filter1_entry = tk.Entry(root)
     filter1_entry.place(x=10, y=410, width=600, height=30)
     
-    filter1_button = tk.Button(root, text="IGNORE", command=toggle_filter1, bg="gray", activebackground="gray")
+    filter1_button = tk.Button(root, text="IGNORE", command=toggle_filter1, bg="orange", activebackground="gray")
     filter1_button.place(x=620, y=410, width=120, height=30)
 
     # Create filter2 input field and button
@@ -349,7 +348,7 @@ def create_gui():
     interval_entry.place(x=760, y=370, width=100, height=30)
     
     interval_button = tk.Button(root, text="INTERVAL", command=update_interval_time, bg="gray", activebackground="gray")
-    interval_button.place(x=870, y=370, width=120, height=30)
+    interval_button.place(x=870, y=370, width=100, height=30)
 
     # Create text area for displaying messages
     global text_area
@@ -366,7 +365,6 @@ gui_thread.start()
 
 while True:
     readback()
-    time.sleep(0.01)
 
 
 
