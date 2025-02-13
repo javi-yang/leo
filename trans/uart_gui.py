@@ -12,6 +12,7 @@ import time
 import os
 import RPi.GPIO as GPIO
 from datetime import datetime
+from queue import Queue
 
 ser = serial.Serial("/dev/ttyUSB0", 115200, timeout=2)
 ser.flushInput()
@@ -41,6 +42,9 @@ filter2_text = ""
 
 interval_time = 0.3
 
+# Create a queue to buffer incoming data
+data_queue = Queue()
+
 def readback():
     while True:
         count = ser.inWaiting()
@@ -49,13 +53,17 @@ def readback():
             data = ser.readline()
             data = data.strip()
             data = bytes.decode(data, errors="ignore")
-            print(data)
+            data_queue.put(data)
             if 'lemans login:' in data:
                 lemans_login()
-            display_message(data)
-            time.sleep(0.01)
         else:
             break
+
+def process_queue():
+    while not data_queue.empty():
+        data = data_queue.get()
+        display_message(data)
+    root.after(100, process_queue)  # Schedule the next queue processing
 
 def wait_msg():
     while True:
@@ -88,9 +96,7 @@ def A2B_AMP_play():
     print("A2B PLAY START >>>")
     # ser.write("aout_a2b_Amp.sh\r\n".encode())
     ser.write("aout_a2b_Amp.sh T01_MENUETTO.wav\r\n".encode())
-    readback()
-    time.sleep(2)
-    readback()
+
     
 def A2B_USB_play():
     print("A2B PLAY START >>>")
@@ -213,7 +219,10 @@ current_message_index = -1
 def on_enter_click(event=None):
     global last_messages, current_message_index
     data = entry.get()
-    ser.write(data.encode() + "\r\n".encode())
+    
+    ser.write(data.encode().encode())
+    if "lemans:" not in data:
+        ser.write("\r\n".encode())
     last_messages.append(data)
     if len(last_messages) > 10:
         last_messages.pop(0)
@@ -244,12 +253,13 @@ def display_message(message):
     text_area.insert(tk.END, message + "\n")
     text_area.see(tk.END)
     text_area.config(state=tk.DISABLED)
-    # Limit the number of lines to 200
+    # Limit the number of lines to 500
     lines = text_area.get("1.0", tk.END).split("\n")
-    if len(lines) > 200:
+    if len(lines) > 500:
         text_area.delete("1.0", "2.0")
 
 def create_gui():
+    global root, text_area
     # Create the main window
     root = tk.Tk()
     root.title("UART Control")
@@ -355,6 +365,8 @@ def create_gui():
     global text_area
     text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
     text_area.place(x=10, y=530, width=1180, height=350)
+
+    root.after(100, process_queue)  # Start processing the queue
 
     # Run the GUI event loop
     root.mainloop()
