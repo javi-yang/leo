@@ -34,7 +34,7 @@ GPIO.add_event_detect(channel_3, GPIO.RISING, bouncetime=1000)
 GPIO.setup(7, GPIO.OUT)
 # GPIO.output(7, 1)
 
-filter1_active = True
+filter1_active = False
 filter1_text = ""
 filter2_active = False
 filter2_text = ""
@@ -331,7 +331,7 @@ def create_gui():
     filter1_entry = tk.Entry(root)
     filter1_entry.place(x=10, y=410, width=600, height=30)
     
-    filter1_button = tk.Button(root, text="IGNORE", command=toggle_filter1, bg="orange", activebackground="gray")
+    filter1_button = tk.Button(root, text="IGNORE", command=toggle_filter1, bg="gray", activebackground="gray")
     filter1_button.place(x=620, y=410, width=120, height=30)
 
     # Create filter2 input field and button
