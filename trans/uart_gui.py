@@ -88,9 +88,7 @@ def A2B_play():
     print("A2B PLAY START >>>")
     # ser.write("aout_a2b_Amp.sh\r\n".encode())
     ser.write("aout_a2b2.sh T01_MENUETTO.wav\r\n".encode())
-    readback()
-    time.sleep(2)
-    readback()
+
     
 def A2B_AMP_play():
     print("A2B PLAY START >>>")
@@ -102,19 +100,14 @@ def A2B_USB_play():
     print("A2B PLAY START >>>")
     # ser.write("aout_a2b_Amp.sh\r\n".encode())
     ser.write("aout_USB.sh testaudio.wav\r\n".encode())
-    readback()
-    time.sleep(2)
-    readback()
 
 def A2B_record():
     print("A2B RECORD START >>>")
     ser.write("arecord_a2b2.sh /home/root/Test_a2b2.wav\r\n".encode())
-    time.sleep(1)
     
 def STOP_aout():
     print("A2B STOP >>>")
     ser.write("stop_a2b.sh\r\n".encode())
-    time.sleep(1)
 
 def CAN_send():
     ser.write("echo -e \"0,1,2,3,4,5,6,7,8,9,0,0,0,0,0,0\">/tmp/can_write.txt\r\n".encode())
