@@ -53,6 +53,7 @@ def readback():
             if 'lemans login:' in data:
                 lemans_login()
             display_message(data)
+            time.sleep(0.01)
         else:
             break
 
