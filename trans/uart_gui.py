@@ -243,9 +243,9 @@ def display_message(message):
     text_area.insert(tk.END, message + "\n")
     text_area.see(tk.END)
     text_area.config(state=tk.DISABLED)
-    # Limit the number of lines to 500
+    # Limit the number of lines to 200
     lines = text_area.get("1.0", tk.END).split("\n")
-    if len(lines) > 500:
+    if len(lines) > 200:
         text_area.delete("1.0", "2.0")
 
 def create_gui():
