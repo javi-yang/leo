@@ -364,6 +364,32 @@ def create_gui():
     interval_button = tk.Button(tab1, text="INTERVAL", command=update_interval_time, bg="gray", activebackground="gray")
     interval_button.place(x=120, y=370, width=100, height=30)
 
+    # Add widgets to the second tab (tag2)
+    global input1, input2, input3, input4
+    input1 = tk.Entry(tab2, width=10)
+    input1.place(x=10, y=10, width=50, height=30)
+
+    tk.Label(tab2, text="0x").place(x=70, y=10)
+    input2 = tk.Entry(tab2, width=10)
+    input2.place(x=90, y=10, width=50, height=30)
+
+    tk.Label(tab2, text="0x").place(x=150, y=10)
+    input3 = tk.Entry(tab2, width=10)
+    input3.place(x=170, y=10, width=50, height=30)
+
+    tk.Label(tab2, text="0x").place(x=230, y=10)
+    input4 = tk.Entry(tab2, width=10)
+    input4.place(x=250, y=10, width=50, height=30)
+
+    read_button = tk.Button(tab2, text="READ", command=read_command)
+    read_button.place(x=310, y=10, width=50, height=30)
+
+    send_button = tk.Button(tab2, text="SEND", command=send_command)
+    send_button.place(x=370, y=10, width=50, height=30)
+
+    dump_button = tk.Button(tab2, text="DUMP", command=dump_command)
+    dump_button.place(x=430, y=10, width=50, height=30)
+
     # Create text area for displaying messages
     global text_area
     text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
@@ -373,6 +399,18 @@ def create_gui():
 
     # Run the GUI event loop
     root.mainloop()
+
+def read_command():
+    command = "i2cget -y -f " + input1.get() + input2.get() + input3.get()
+    ser.write(command.encode())
+
+def send_command():
+    command = "i2cset -y -f " + input1.get() + input2.get() + input3.get() + input4.get()
+    ser.write(command.encode())
+
+def dump_command():
+    command = "i2cdump -y -f " + input1.get() + input2.get()
+    ser.write(command.encode())
 
 # Run the GUI in a separate thread
 gui_thread = threading.Thread(target=create_gui)
