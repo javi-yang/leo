@@ -369,31 +369,31 @@ def create_gui():
     input1 = tk.Entry(tab2, width=10)
     input1.place(x=10, y=10, width=50, height=30)
 
-    tk.Label(tab2, text="0x").place(x=70, y=10)
+    tk.Label(tab2, text="0x").place(x=70, y=12)
     input2 = tk.Entry(tab2, width=10)
     input2.place(x=90, y=10, width=50, height=30)
 
-    tk.Label(tab2, text="0x").place(x=150, y=10)
+    tk.Label(tab2, text="0x").place(x=150, y=12)
     input3 = tk.Entry(tab2, width=10)
     input3.place(x=170, y=10, width=50, height=30)
 
-    tk.Label(tab2, text="0x").place(x=230, y=10)
+    tk.Label(tab2, text="0x").place(x=230, y=12)
     input4 = tk.Entry(tab2, width=10)
     input4.place(x=250, y=10, width=50, height=30)
 
     read_button = tk.Button(tab2, text="READ", command=read_command)
-    read_button.place(x=310, y=10, width=50, height=30)
+    read_button.place(x=310, y=10, width=100, height=30)
 
     send_button = tk.Button(tab2, text="SEND", command=send_command)
-    send_button.place(x=370, y=10, width=50, height=30)
+    send_button.place(x=420, y=10, width=100, height=30)
 
     dump_button = tk.Button(tab2, text="DUMP", command=dump_command)
-    dump_button.place(x=430, y=10, width=50, height=30)
+    dump_button.place(x=530, y=10, width=100, height=30)
 
     # Create text area for displaying messages
     global text_area
     text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
-    text_area.place(x=10, y=530, width=1180, height=350)
+    text_area.place(x=10, y=550, width=1180, height=330)
 
     root.after(100, process_queue)  # Start processing the queue
 
