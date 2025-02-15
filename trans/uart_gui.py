@@ -64,7 +64,12 @@ def process_queue():
     while not data_queue.empty():
         data = data_queue.get()
         display_message(data)
+        if button_reserve.config('bg')[-1] == 'orange':
+            with open('/home/javi/leo_share/log.txt', 'a') as log_file:
+                log_file.write(data + '\n')
     root.after(100, process_queue)  # Schedule the next queue processing
+
+
 
 def wait_msg():
     while True:
@@ -180,13 +185,15 @@ def toggle_button_power():
         GPIO.output(7, 0)
 
 def toggle_button_reserve():
-    if button_power.config('bg')[-1] == 'orange':
-        button_power.config(bg="gray", activebackground="gray")
-        GPIO.output(7, 1)
+    global data
+    if button_reserve.config('bg')[-1] == 'orange':
+        button_reserve.config(bg="gray", activebackground="gray")
     else:
-        button_power.config(bg="orange", activebackground="orange")
-        GPIO.output(7, 0)
-
+        button_reserve.config(bg="orange", activebackground="orange")
+        '''
+        with open('/home/javi/leo_share/log.txt', 'a') as log_file:
+            log_file.write(data + '\n')
+        '''
 def toggle_filter1():
     global filter1_active, filter1_button, filter1_text
     if filter1_button.config('bg')[-1] == 'orange':
@@ -251,6 +258,18 @@ def display_message(message):
     lines = text_area.get("1.0", tk.END).split("\n")
     if len(lines) > 500:
         text_area.delete("1.0", "2.0")
+
+def ser_i2c_read_command():
+    command = "i2cget -y -f " + input1.get() + " " + input2.get() + " " + input3.get()
+    ser.write(command.encode())
+
+def ser_i2c_send_command():
+    command = "i2cset -y -f " + input1.get() + " " + input2.get() + " " +input3.get() + " " + input4.get()
+    ser.write(command.encode())
+
+def ser_i2c_dump_command():
+    command = "i2cdump -y -f " + input1.get() + " " + input2.get()
+    ser.write(command.encode())
 
 def create_gui():
     global root, text_area
@@ -369,25 +388,25 @@ def create_gui():
     input1 = tk.Entry(tab2, width=10)
     input1.place(x=10, y=10, width=50, height=30)
 
-    tk.Label(tab2, text="0x").place(x=70, y=12)
+    tk.Label(tab2, text="0x").place(x=70, y=14)
     input2 = tk.Entry(tab2, width=10)
     input2.place(x=90, y=10, width=50, height=30)
 
-    tk.Label(tab2, text="0x").place(x=150, y=12)
+    tk.Label(tab2, text="0x").place(x=150, y=14)
     input3 = tk.Entry(tab2, width=10)
     input3.place(x=170, y=10, width=50, height=30)
 
-    tk.Label(tab2, text="0x").place(x=230, y=12)
+    tk.Label(tab2, text="0x").place(x=230, y=14)
     input4 = tk.Entry(tab2, width=10)
     input4.place(x=250, y=10, width=50, height=30)
 
-    read_button = tk.Button(tab2, text="READ", command=read_command)
+    read_button = tk.Button(tab2, text="READ", command=ser_i2c_read_command)
     read_button.place(x=310, y=10, width=100, height=30)
 
-    send_button = tk.Button(tab2, text="SEND", command=send_command)
+    send_button = tk.Button(tab2, text="SEND", command=ser_i2c_send_command)
     send_button.place(x=420, y=10, width=100, height=30)
 
-    dump_button = tk.Button(tab2, text="DUMP", command=dump_command)
+    dump_button = tk.Button(tab2, text="DUMP", command=ser_i2c_dump_command)
     dump_button.place(x=530, y=10, width=100, height=30)
 
     # Create text area for displaying messages
@@ -400,17 +419,7 @@ def create_gui():
     # Run the GUI event loop
     root.mainloop()
 
-def read_command():
-    command = "i2cget -y -f " + input1.get() + input2.get() + input3.get()
-    ser.write(command.encode())
 
-def send_command():
-    command = "i2cset -y -f " + input1.get() + input2.get() + input3.get() + input4.get()
-    ser.write(command.encode())
-
-def dump_command():
-    command = "i2cdump -y -f " + input1.get() + input2.get()
-    ser.write(command.encode())
 
 # Run the GUI in a separate thread
 gui_thread = threading.Thread(target=create_gui)
