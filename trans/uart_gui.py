@@ -6,6 +6,7 @@ import threading
 import tkinter as tk
 from tkinter import messagebox
 from tkinter.scrolledtext import ScrolledText
+from tkinter import ttk
 import serial
 import struct
 import time
@@ -213,7 +214,7 @@ def on_enter_click(event=None):
     global last_messages, current_message_index
     data = entry.get()
     
-    ser.write(data.encode().encode())
+    ser.write(data.encode())
     if "lemans:" not in data:
         ser.write("\r\n".encode())
     last_messages.append(data)
@@ -258,105 +259,114 @@ def create_gui():
     root.title("UART Control")
     root.geometry("1200x900")  # Set default window size
 
-    # Create buttons
-    #lie 1
-    button1 = tk.Button(root, text="REBOOT", command=reboot)
+    # Create a Notebook widget
+    notebook = ttk.Notebook(root)
+    notebook.pack(expand=True, fill='both')
+
+    # Create the first tab (tag1)
+    tab1 = ttk.Frame(notebook)
+    notebook.add(tab1, text='tag1')
+
+    # Create the second tab (tag2)
+    tab2 = ttk.Frame(notebook)
+    notebook.add(tab2, text='tag2')
+
+    # Add widgets to the first tab (tag1)
+    button1 = tk.Button(tab1, text="REBOOT", command=reboot)
     button1.place(x=10, y=10, width=200, height=50)
 
-    button2 = tk.Button(root, text="Lemans Login", command=lemans_login)
+    button2 = tk.Button(tab1, text="Lemans Login", command=lemans_login)
     button2.place(x=10, y=70, width=200, height=50)
 
-    button3 = tk.Button(root, text="A2B Play", command=A2B_play)
+    button3 = tk.Button(tab1, text="A2B Play", command=A2B_play)
     button3.place(x=10, y=130, width=200, height=50)
 
-    button4 = tk.Button(root, text="A2B STOP", command=STOP_aout)
+    button4 = tk.Button(tab1, text="A2B STOP", command=STOP_aout)
     button4.place(x=10, y=190, width=200, height=50)
 
-    button5 = tk.Button(root, text="USB DSRC", command=usb_mode)
+    button5 = tk.Button(tab1, text="USB DSRC", command=usb_mode)
     button5.place(x=10, y=250, width=200, height=50)
 
-    button6 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button6 = tk.Button(tab1, text="A2B Record", command=A2B_record)
     button6.place(x=10, y=310, width=200, height=50)
 
-    #line 2
-    button7 = tk.Button(root, text="A2B AMP", command=A2B_AMP_play)
+    button7 = tk.Button(tab1, text="A2B AMP", command=A2B_AMP_play)
     button7.place(x=220, y=70, width=200, height=50)
 
-    button8 = tk.Button(root, text="A2B Play", command=A2B_play)
+    button8 = tk.Button(tab1, text="A2B Play", command=A2B_play)
     button8.place(x=220, y=130, width=200, height=50)
 
-    button9 = tk.Button(root, text="PWER INTRPT", command=power_interrupt)
+    button9 = tk.Button(tab1, text="PWER INTRPT", command=power_interrupt)
     button9.place(x=220, y=190, width=200, height=50)
 
-    button10 = tk.Button(root, text="CAN SEND", command=CAN_send)
+    button10 = tk.Button(tab1, text="CAN SEND", command=CAN_send)
     button10.place(x=220, y=250, width=200, height=50)
 
-    button11 = tk.Button(root, text="A2B Record", command=A2B_record)
+    button11 = tk.Button(tab1, text="A2B Record", command=A2B_record)
     button11.place(x=220, y=310, width=200, height=50)
 
-    #line 3
-    button12 = tk.Button(root, text="I2C DUMP", command=I2C_dump)
+    button12 = tk.Button(tab1, text="I2C DUMP", command=I2C_dump)
     button12.place(x=430, y=70, width=200, height=50)
 
-    button13 = tk.Button(root, text="I2C SET", command=I2C_set)
+    button13 = tk.Button(tab1, text="I2C SET", command=I2C_set)
     button13.place(x=430, y=130, width=200, height=50)
 
-    button14 = tk.Button(root, text="FUNC 002", command=func_002)
+    button14 = tk.Button(tab1, text="FUNC 002", command=func_002)
     button14.place(x=430, y=190, width=200, height=50)
 
-    button15 = tk.Button(root, text="FUNC 004", command=func_004)
+    button15 = tk.Button(tab1, text="FUNC 004", command=func_004)
     button15.place(x=430, y=250, width=200, height=50)
 
-    button16 = tk.Button(root, text="TERMINAL", command=terminal)
+    button16 = tk.Button(tab1, text="TERMINAL", command=terminal)
     button16.place(x=430, y=310, width=200, height=50)
 
     # Create toggle button
     global button_power
-    button_power = tk.Button(root, text="POWER", command=toggle_button_power, bg="gray", activebackground="gray")
+    button_power = tk.Button(tab1, text="POWER", command=toggle_button_power, bg="gray", activebackground="gray")
     button_power.place(x=220, y=10, width=200, height=50)
 
     global button_reserve
-    button_reserve = tk.Button(root, text="RESERVE", command=toggle_button_reserve, bg="gray", activebackground="gray")
+    button_reserve = tk.Button(tab1, text="RESERVE", command=toggle_button_reserve, bg="gray", activebackground="gray")
     button_reserve.place(x=430, y=10, width=200, height=50)
 
     # Create input field and ENTER button
     global entry
-    entry = tk.Entry(root)
+    entry = tk.Entry(tab1)
     entry.place(x=10, y=490, width=600, height=30)
     entry.bind("<Return>", on_enter_click)
     entry.bind("<Up>", on_key_up)  # Bind Page Up key to on_key_up function
     entry.bind("<Down>", on_key_down)  # Bind Page Down key to on_key_down function
     
-    enter_button = tk.Button(root, text="ENTER", command=on_enter_click)
+    enter_button = tk.Button(tab1, text="ENTER", command=on_enter_click)
     enter_button.place(x=620, y=490, width=120, height=30)
 
     # Create filter1 input field and button
     global filter1_entry, filter1_button
-    filter1_entry = tk.Entry(root)
+    filter1_entry = tk.Entry(tab1)
     filter1_entry.place(x=10, y=410, width=600, height=30)
     
-    filter1_button = tk.Button(root, text="IGNORE", command=toggle_filter1, bg="gray", activebackground="gray")
+    filter1_button = tk.Button(tab1, text="IGNORE", command=toggle_filter1, bg="gray", activebackground="gray")
     filter1_button.place(x=620, y=410, width=120, height=30)
 
     # Create filter2 input field and button
     global filter2_entry, filter2_button
-    filter2_entry = tk.Entry(root)
+    filter2_entry = tk.Entry(tab1)
     filter2_entry.place(x=10, y=450, width=600, height=30)
     
-    filter2_button = tk.Button(root, text="REMAIN", command=toggle_filter2, bg="gray", activebackground="gray")
+    filter2_button = tk.Button(tab1, text="REMAIN", command=toggle_filter2, bg="gray", activebackground="gray")
     filter2_button.place(x=620, y=450, width=120, height=30)
 
     # Create interval time input field and button
     global interval_entry
-    interval_entry = tk.Entry(root)
+    interval_entry = tk.Entry(tab1)
     interval_entry.place(x=10, y=370, width=100, height=30)
     
-    interval_button = tk.Button(root, text="INTERVAL", command=update_interval_time, bg="gray", activebackground="gray")
+    interval_button = tk.Button(tab1, text="INTERVAL", command=update_interval_time, bg="gray", activebackground="gray")
     interval_button.place(x=120, y=370, width=100, height=30)
 
     # Create text area for displaying messages
     global text_area
-    text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
+    text_area = ScrolledText(tab1, height=15, width=113, state=tk.DISABLED)
     text_area.place(x=10, y=530, width=1180, height=350)
 
     root.after(100, process_queue)  # Start processing the queue
