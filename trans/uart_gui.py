@@ -366,7 +366,7 @@ def create_gui():
 
     # Create text area for displaying messages
     global text_area
-    text_area = ScrolledText(tab1, height=15, width=113, state=tk.DISABLED)
+    text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
     text_area.place(x=10, y=530, width=1180, height=350)
 
     root.after(100, process_queue)  # Start processing the queue
