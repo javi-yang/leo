@@ -260,15 +260,15 @@ def display_message(message):
         text_area.delete("1.0", "2.0")
 
 def ser_i2c_read_command():
-    command = "i2cget -y -f " + input1.get() + " 0x" + input2.get() + " 0x" + input3.get()
+    command = "i2cget -y -f " + input1.get() + " 0x" + input2.get() + " 0x" + input3.get() + "\r\n"
     ser.write(command.encode())
 
 def ser_i2c_send_command():
-    command = "i2cset -y -f " + input1.get() + " 0x" + input2.get() + " 0x" +input3.get() + " 0x" + input4.get()
+    command = "i2cset -y -f " + input1.get() + " 0x" + input2.get() + " 0x" +input3.get() + " 0x" + input4.get() + "\r\n"
     ser.write(command.encode())
 
 def ser_i2c_dump_command():
-    command = "i2cdump -y -f " + input1.get() + " 0x" + input2.get()
+    command = "i2cdump -y -f " + input1.get() + " 0x" + input2.get() + "\r\n"
     ser.write(command.encode())
 
 def create_gui():
