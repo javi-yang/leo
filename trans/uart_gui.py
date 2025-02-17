@@ -278,8 +278,12 @@ def create_gui():
     root.title("UART Control")
     root.geometry("1200x900")  # Set default window size
 
+    # Create a style for the Notebook tabs
+    style = ttk.Style()
+    style.configure('TNotebook.Tab', padding=[20, 20], font=('Helvetica', 24))  # Double the padding and font size
+
     # Create a Notebook widget
-    notebook = ttk.Notebook(root)
+    notebook = ttk.Notebook(root, style='TNotebook')
     notebook.pack(expand=True, fill='both')
 
     # Create the first tab (tag1)
