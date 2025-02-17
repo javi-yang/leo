@@ -280,7 +280,7 @@ def create_gui():
 
     # Create a style for the Notebook tabs
     style = ttk.Style()
-    style.configure('TNotebook.Tab', padding=[20, 20], font=('Helvetica', 24))  # Double the padding and font size
+    style.configure('TNotebook.Tab', padding=[20, 10], font=('Helvetica', 18))  # Double the padding and font size
 
     # Create a Notebook widget
     notebook = ttk.Notebook(root, style='TNotebook')
