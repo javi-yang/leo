@@ -280,7 +280,7 @@ def create_gui():
 
     # Create a style for the Notebook tabs
     style = ttk.Style()
-    style.configure('TNotebook.Tab', padding=[20, 10], font=('Helvetica', 18))  # Double the padding and font size
+    style.configure('TNotebook.Tab', padding=[20, 5], font=('Helvetica', 12))  # Double the padding and font size
 
     # Create a Notebook widget
     notebook = ttk.Notebook(root, style='TNotebook')
@@ -416,7 +416,7 @@ def create_gui():
     # Create text area for displaying messages
     global text_area
     text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
-    text_area.place(x=10, y=550, width=1180, height=330)
+    text_area.place(x=10, y=560, width=1180, height=320)
 
     root.after(100, process_queue)  # Start processing the queue
 
