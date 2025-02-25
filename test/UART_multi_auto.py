@@ -8,7 +8,7 @@ import time
 import os
 import RPi.GPIO as GPIO
 
-ser = serial.Serial("/dev/ttyUSB1", 115200, timeout = 2)
+ser = serial.Serial("/dev/ttyUSB0", 115200, timeout = 2)
 ser.flushInput()
 
 channel_1 = 11
@@ -75,7 +75,7 @@ def lemans_login():
     os.system('./tunersoft')    
     time.sleep(5)
     readback()
-'''
+
     ser.write("alsaucm -n -b - << EOM\r\n".encode())
     readback()
     ser.write("open sa8255-adp-star-snd-card\r\n".encode())
@@ -85,8 +85,9 @@ def lemans_login():
     ser.write("EOM\r\n".encode())
     time.sleep(2)
     readback()
-    ser.write("arecord -Dagm:1,103 -f S16_LE -c 2 -r 48000 /tmp/new.wav &\r\n".encode())
 
+    ser.write("arecord -Dagm:1,103 -f S16_LE -c 2 -r 48000 /tmp/new.wav &\r\n".encode())
+'''
     
 def test_cmd():
     print("TEST_CMD >>>")
@@ -212,7 +213,7 @@ def func_in():
 while True:
 
     func_in()
-    
+    ser.write("oelinux123\r\n".encode())
     count = ser.inWaiting()    
     if count != 0:
         data = ser.readline()
