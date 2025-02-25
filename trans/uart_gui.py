@@ -343,6 +343,22 @@ def create_gui():
     button16 = tk.Button(tab1, text="TERMINAL", command=terminal)
     button16.place(x=430, y=310, width=200, height=50)
 
+    # Add the copied buttons to the right of the existing buttons
+    button17 = tk.Button(tab1, text="I2C DUMP", command=I2C_dump)
+    button17.place(x=640, y=70, width=200, height=50)
+
+    button18 = tk.Button(tab1, text="I2C SET", command=I2C_set)
+    button18.place(x=640, y=130, width=200, height=50)
+
+    button19 = tk.Button(tab1, text="FUNC 002", command=func_002)
+    button19.place(x=640, y=190, width=200, height=50)
+
+    button20 = tk.Button(tab1, text="FUNC 004", command=func_004)
+    button20.place(x=640, y=250, width=200, height=50)
+
+    button21 = tk.Button(tab1, text="TERMINAL", command=terminal)
+    button21.place(x=640, y=310, width=200, height=50)
+
     # Create toggle button
     global button_power
     button_power = tk.Button(tab1, text="POWER", command=toggle_button_power, bg="gray", activebackground="gray")
