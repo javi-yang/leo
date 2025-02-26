@@ -148,10 +148,10 @@ def func_002():
 def I2C_set():
     ser.write("i2cset -y -f 7 0x68 0x11 0x23\r\n".encode())
 
-def tuner_out_amp()
+def tuner_out_amp():
     ser.write("tuner_out_Amp.sh\r\n".encode())
 
-def tuner_test()
+def tuner_test():
     ser.write("tunertest_client.sh\r\n".encode())
     time.sleep(1)
     ser.write("1\r\n".encode())
