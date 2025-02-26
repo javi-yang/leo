@@ -36,6 +36,7 @@ GPIO.add_event_detect(channel_3, GPIO.RISING, bouncetime=1000)
 GPIO.setup(7, GPIO.OUT)
 # GPIO.output(7, 1)
 
+
 filter1_active = False
 filter1_text = ""
 filter2_active = False
@@ -69,7 +70,15 @@ def process_queue():
                 log_file.write(data + '\n')
     root.after(100, process_queue)  # Schedule the next queue processing
 
-
+def default_message():
+    with open('/home/javi/leo_share/default_message.txt', 'a') as default_message_file:
+       for line in default_message_file.readlines():
+            if "BT" in line:
+                bt_address = line.split("BT:")[1]
+            elif "WIFI" in line:
+                wifi_address = line.split("WIFI:")[1]
+            elif "ETH" in line:
+                eth_address = line.split("ETH:")[1] 
 
 def wait_msg():
     while True:
@@ -415,7 +424,7 @@ def create_gui():
     interval_button = tk.Button(tab1, text="INTERVAL", command=update_interval_time, bg="gray", activebackground="gray")
     interval_button.place(x=120, y=370, width=100, height=30)
 
-    # Add widgets to the second tab (tag2)
+    # I2C transit block (tag2)
     global input1, input2, input3, input4
     input1 = tk.Entry(tab2, width=10)
     input1.place(x=10, y=10, width=50, height=30)
@@ -440,6 +449,26 @@ def create_gui():
 
     dump_button = tk.Button(tab2, text="DUMP", command=ser_i2c_dump_command)
     dump_button.place(x=530, y=10, width=100, height=30)
+
+    # ETH Address block
+    global eth_address
+    tk.Label(tab2, text="ETH:").place(x=10, y=50)
+    eth_address = tk.Entry(tab2, width=20)
+    eth_address.place(x=100, y=50, width=300, height=30)
+
+    # WIFI Address block
+    global wifi_address
+    tk.Label(tab2, text="WIFI:").place(x=10, y=90)
+    wifi_address = tk.Entry(tab2, width=20)
+    wifi_address.place(x=100, y=90, width=300, height=30)
+
+    # BT Address block
+    global bt_address
+    tk.Label(tab2, text="BT:").place(x=10, y=130)
+    bt_address = tk.Entry(tab2, width=20)
+    bt_address.place(x=100, y=130, width=300, height=30)
+
+
 
     # Create text area for displaying messages
     global text_area
