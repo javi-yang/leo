@@ -148,6 +148,18 @@ def func_002():
 def I2C_set():
     ser.write("i2cset -y -f 7 0x68 0x11 0x23\r\n".encode())
 
+def tuner_out_amp()
+    ser.write("tuner_out_Amp.sh\r\n".encode())
+
+def tuner_test()
+    ser.write("tunertest_client.sh\r\n".encode())
+    time.sleep(1)
+    ser.write("1\r\n".encode())
+    time.sleep(0.5)
+    ser.write("1\r\n".encode())
+    time.sleep(0.5)
+    ser.write("98100\r\n".encode())
+
 def terminal():
     '''
     os.system('i2cdump -y -f 1 0x10')
@@ -334,10 +346,10 @@ def create_gui():
     button13 = tk.Button(tab1, text="I2C SET", command=I2C_set)
     button13.place(x=430, y=130, width=200, height=50)
 
-    button14 = tk.Button(tab1, text="FUNC 002", command=func_002)
+    button14 = tk.Button(tab1, text="TUNER OUT AMP", command=tuner_out_amp)
     button14.place(x=430, y=190, width=200, height=50)
 
-    button15 = tk.Button(tab1, text="FUNC 004", command=func_004)
+    button15 = tk.Button(tab1, text="TUNER TEST", command=tuner_test)
     button15.place(x=430, y=250, width=200, height=50)
 
     button16 = tk.Button(tab1, text="TERMINAL", command=terminal)
