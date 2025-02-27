@@ -71,6 +71,7 @@ def process_queue():
     root.after(100, process_queue)  # Schedule the next queue processing
 
 def default_message():
+    global bt_address, wifi_address, eth_address
     with open('/home/javi/leo_share/default_message.txt', 'a') as default_message_file:
        for line in default_message_file.readlines():
             if "BT" in line:
