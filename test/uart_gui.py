@@ -15,7 +15,7 @@ import RPi.GPIO as GPIO
 from datetime import datetime
 from queue import Queue
 
-ser = serial.Serial("/dev/ttyUSB1", 115200, timeout=2)
+ser = serial.Serial("/dev/ttyUSB0", 115200, timeout=2)
 ser.flushInput()
 
 channel_1 = 11
@@ -50,7 +50,7 @@ data_queue = Queue()
 def readback():
     while True:
         count = ser.inWaiting()
-        
+        time.sleep(0.01)
         if count != 0:
             data = ser.readline()
             data = data.strip()
@@ -124,6 +124,12 @@ def A2B_record():
 def STOP_aout():
     print("A2B STOP >>>")
     ser.write("stop_a2b.sh\r\n".encode())
+    
+def cpu_stress():
+    time.sleep(40)
+    ser.write("CPU_Stress 70 30\r\n".encode())
+    time.sleep(35)
+    ser.write("CPU_Stress 70 30\r\n".encode())
 
 def CAN_send():
     ser.write("echo -e \"0,1,2,3,4,5,6,7,8,9,0,0,0,0,0,0\">/tmp/can_write.txt\r\n".encode())
@@ -152,8 +158,8 @@ def I2C_dump():
     ser.write("i2cdump -y -f 7 0x69\r\n".encode())
     # ser.write("i2cdetect -a\r\n".encode())
 
-def ctrl_c():
-    ser.write("\003\r\n".encode())
+def func_002():
+    ser.write("i2cget -y -f 7 0x68 0x17\r\n".encode())
 
 def I2C_set():
     ser.write("i2cset -y -f 7 0x68 0x11 0x23\r\n".encode())
@@ -162,31 +168,14 @@ def tuner_out_amp():
     ser.write("tuner_out_Amp.sh\r\n".encode())
 
 def tuner_test():
-    ser.write("tunertest_client\r\n".encode())
+    ser.write("tunertest_client.sh\r\n".encode())
     time.sleep(1)
-    readback()
     ser.write("1\r\n".encode())
     time.sleep(0.5)
-    readback()
     ser.write("1\r\n".encode())
     time.sleep(0.5)
-    readback()
     ser.write("98100\r\n".encode())
 
-def eth_test():
-    ser.write("ifconfig eth0 192.168.110.2".encode())
-    '''
-    global eth_address
-    cmd_eth = "ifconfig eth0 " + eth_address + "\r\n"
-    ser.write(cmd_eth.encode())
-    time.sleep(0.5)
-    readback()
-    ser.write("iperf3 -s\r\n".encode())
-    '''
-def iperf3_s():
-    ser.write("iperf3 -s\r\n".encode())
-def wifi_connect():
-    ser.write("wifi_connect DHU_5G 12345678\r\n".encode())
 def terminal():
     '''
     os.system('i2cdump -y -f 1 0x10')
@@ -355,7 +344,7 @@ def create_gui():
     button7 = tk.Button(tab1, text="A2B AMP", command=A2B_AMP_play)
     button7.place(x=220, y=70, width=200, height=50)
 
-    button8 = tk.Button(tab1, text="IPERF3 -S", command=iperf3_s)
+    button8 = tk.Button(tab1, text="A2B Play", command=A2B_play)
     button8.place(x=220, y=130, width=200, height=50)
 
     button9 = tk.Button(tab1, text="PWER INTRPT", command=power_interrupt)
@@ -364,7 +353,7 @@ def create_gui():
     button10 = tk.Button(tab1, text="CAN SEND", command=CAN_send)
     button10.place(x=220, y=250, width=200, height=50)
 
-    button11 = tk.Button(tab1, text="WIFI CONNECT", command=wifi_connect)
+    button11 = tk.Button(tab1, text="A2B Record", command=A2B_record)
     button11.place(x=220, y=310, width=200, height=50)
 
     button12 = tk.Button(tab1, text="I2C DUMP", command=I2C_dump)
@@ -383,19 +372,19 @@ def create_gui():
     button16.place(x=430, y=310, width=200, height=50)
 
     # Add the copied buttons to the right of the existing buttons
-    button17 = tk.Button(tab1, text="RESERVE", command=I2C_dump)
+    button17 = tk.Button(tab1, text="I2C DUMP", command=I2C_dump)
     button17.place(x=640, y=70, width=200, height=50)
 
-    button18 = tk.Button(tab1, text="RESERVE", command=I2C_set)
+    button18 = tk.Button(tab1, text="I2C SET", command=I2C_set)
     button18.place(x=640, y=130, width=200, height=50)
 
-    button19 = tk.Button(tab1, text="CTRL+C", command=ctrl_c)
+    button19 = tk.Button(tab1, text="CPU STRESS", command=cpu_stress)
     button19.place(x=640, y=190, width=200, height=50)
 
-    button20 = tk.Button(tab1, text="ETHERNET", command=eth_test)
+    button20 = tk.Button(tab1, text="FUNC 004", command=func_004)
     button20.place(x=640, y=250, width=200, height=50)
 
-    button21 = tk.Button(tab1, text="RESERVE", command=terminal)
+    button21 = tk.Button(tab1, text="TERMINAL", command=terminal)
     button21.place(x=640, y=310, width=200, height=50)
 
     # Create toggle button
@@ -491,7 +480,7 @@ def create_gui():
     # Create text area for displaying messages
     global text_area
     text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
-    text_area.place(x=10, y=560, width=1180, height=250)
+    text_area.place(x=10, y=560, width=1180, height=320)
 
     root.after(100, process_queue)  # Start processing the queue
 
@@ -506,7 +495,6 @@ gui_thread.daemon = True
 gui_thread.start()
 
 while True:
-    time.sleep(0.01)
     readback()
 
 
