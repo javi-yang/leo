@@ -174,7 +174,7 @@ def tuner_test():
     ser.write("98100\r\n".encode())
 
 def eth_test():
-    ser.write("ifconfig eth0 192.168.110.2".encode())
+    ser.write("ifconfig eth0 192.168.110.2\r\n".encode())
     '''
     global eth_address
     cmd_eth = "ifconfig eth0 " + eth_address + "\r\n"
