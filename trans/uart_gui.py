@@ -15,7 +15,7 @@ import RPi.GPIO as GPIO
 from datetime import datetime
 from queue import Queue
 
-ser = serial.Serial("/dev/ttyUSB1", 115200, timeout=2)
+ser = serial.Serial("/dev/ttyUSB0", 115200, timeout=2)
 ser.flushInput()
 
 channel_1 = 11
@@ -173,6 +173,9 @@ def tuner_test():
     readback()
     ser.write("98100\r\n".encode())
 
+def aout_amp_1k():
+    ser.write("aout_a2b_Amp.sh T02_1KHZ_SINE_WAVE.wav\r\n".encode())
+
 def eth_test():
     ser.write("ifconfig eth0 192.168.110.2\r\n".encode())
     '''
@@ -185,6 +188,8 @@ def eth_test():
     '''
 def iperf3_s():
     ser.write("iperf3 -s\r\n".encode())
+def op_mode_max():
+    ser.write("Set_OpMode_Max\r\n".encode())
 def wifi_connect():
     ser.write("wifi_connect DHU_5G 12345678\r\n".encode())
 def terminal():
@@ -383,10 +388,10 @@ def create_gui():
     button16.place(x=430, y=310, width=200, height=50)
 
     # Add the copied buttons to the right of the existing buttons
-    button17 = tk.Button(tab1, text="RESERVE", command=I2C_dump)
+    button17 = tk.Button(tab1, text="OP MODE MAX", command=op_mode_max)
     button17.place(x=640, y=70, width=200, height=50)
 
-    button18 = tk.Button(tab1, text="RESERVE", command=I2C_set)
+    button18 = tk.Button(tab1, text="1KHZ", command=aout_amp_1k)
     button18.place(x=640, y=130, width=200, height=50)
 
     button19 = tk.Button(tab1, text="CTRL+C", command=ctrl_c)
