@@ -403,6 +403,21 @@ def create_gui():
     button21 = tk.Button(tab1, text="RESERVE", command=terminal)
     button21.place(x=640, y=310, width=200, height=50)
 
+    button22 = tk.Button(tab1, text="RESERVE", command=func_004)
+    button22.place(x=850, y=70, width=200, height=50)
+
+    button23 = tk.Button(tab1, text="RESERVE", command=test_cmd)
+    button23.place(x=850, y=130, width=200, height=50)
+
+    button24 = tk.Button(tab1, text="RESERVE", command=usb_mode)
+    button24.place(x=850, y=190, width=200, height=50)
+
+    button25 = tk.Button(tab1, text="RESERVE", command=usb_mode)
+    button25.place(x=850, y=250, width=200, height=50)
+
+    button26 = tk.Button(tab1, text="RESERVE", command=usb_mode)
+    button26.place(x=850, y=310, width=200, height=50)
+
     # Create toggle button
     global button_power
     button_power = tk.Button(tab1, text="POWER", command=toggle_button_power, bg="gray", activebackground="gray")
