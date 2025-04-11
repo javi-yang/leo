@@ -176,6 +176,11 @@ def tuner_test():
 def aout_amp_1k():
     ser.write("aout_a2b_Amp.sh T02_1KHZ_SINE_WAVE.wav\r\n".encode())
 
+def lvds_low():
+    ser.write("i2cset -y -f 7 0x68 0x30 0x83\r\n".encode())
+    ser.write("i2cset -y -f 7 0x68 0x01 0x00\r\n".encode())
+    ser.write("i2cset -y -f 7 0x68 0x2E 0x83\r\n".encode())
+
 def eth_test():
     ser.write("ifconfig eth0 192.168.110.2\r\n".encode())
     '''
@@ -400,7 +405,7 @@ def create_gui():
     button20 = tk.Button(tab1, text="ETHERNET", command=eth_test)
     button20.place(x=640, y=250, width=200, height=50)
 
-    button21 = tk.Button(tab1, text="RESERVE", command=terminal)
+    button21 = tk.Button(tab1, text="LVDS LOW", command=lvds_low)
     button21.place(x=640, y=310, width=200, height=50)
 
     button22 = tk.Button(tab1, text="RESERVE", command=func_004)
