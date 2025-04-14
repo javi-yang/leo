@@ -178,8 +178,12 @@ def aout_amp_1k():
 
 def lvds_low():
     ser.write("i2cset -y -f 7 0x68 0x30 0x83\r\n".encode())
+    time.sleep(1)
     ser.write("i2cset -y -f 7 0x68 0x01 0x00\r\n".encode())
-    ser.write("i2cset -y -f 7 0x68 0x2E 0x83\r\n".encode())
+    time.sleep(1)
+    ser.write("i2cset -y -f 7 0x69 0x2E 0x83\r\n".encode())
+    time.sleep(1)
+    ser.write("i2cget -y -f 7 0x69 0x2E\r\n".encode())
 
 def eth_test():
     ser.write("ifconfig eth0 192.168.110.2\r\n".encode())
