@@ -185,6 +185,9 @@ def lvds_low():
     time.sleep(1)
     ser.write("i2cget -y -f 7 0x69 0x2E\r\n".encode())
 
+def can_echo():
+    ser.write("CAN_Echoback\r\n".encode())
+
 def eth_test():
     ser.write("ifconfig eth0 192.168.110.2\r\n".encode())
     '''
@@ -196,6 +199,10 @@ def eth_test():
     ser.write("iperf3 -s\r\n".encode())
     '''
 def iperf3_s():
+    ser.write("iperf3 -s & iperf3 -s -p 5202\r\n".encode())
+def iperf3_s_wifi():
+    ser.write("iperf3 -s -p 5202\r\n".encode())
+def iperf3_s_eth():
     ser.write("iperf3 -s\r\n".encode())
 def op_mode_max():
     ser.write("Set_OpMode_Max\r\n".encode())
@@ -412,13 +419,13 @@ def create_gui():
     button21 = tk.Button(tab1, text="LVDS LOW", command=lvds_low)
     button21.place(x=640, y=310, width=200, height=50)
 
-    button22 = tk.Button(tab1, text="RESERVE", command=func_004)
+    button22 = tk.Button(tab1, text="IPERF3 ETH", command=iperf3_s_eth)
     button22.place(x=850, y=70, width=200, height=50)
 
-    button23 = tk.Button(tab1, text="RESERVE", command=test_cmd)
+    button23 = tk.Button(tab1, text="IPERF3 WIFI", command=iperf3_s_wifi)
     button23.place(x=850, y=130, width=200, height=50)
 
-    button24 = tk.Button(tab1, text="RESERVE", command=usb_mode)
+    button24 = tk.Button(tab1, text="CAN ECHOBACK", command=can_echo)
     button24.place(x=850, y=190, width=200, height=50)
 
     button25 = tk.Button(tab1, text="RESERVE", command=usb_mode)
