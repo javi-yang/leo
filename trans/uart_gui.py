@@ -45,18 +45,18 @@ filter2_text = ""
 interval_time = 0.3
 
 # Create a queue to buffer incoming data
-data_queue = Queue()
+data_queue = Queue(maxsize=100)
 
 def readback():
     while True:
         count = ser.inWaiting()
-        
         if count != 0:
             data = ser.readline()
             data = data.strip()
             data = bytes.decode(data, errors="ignore")
-            data_queue.put(data)
-            if 'lemans login:' in data:
+            if not data_queue.full():  # 检查队列是否已满
+                data_queue.put(data)
+        if 'lemans login:' in data:
                 lemans_login()
         else:
             break
@@ -541,8 +541,13 @@ gui_thread = threading.Thread(target=create_gui)
 gui_thread.daemon = True
 gui_thread.start()
 
+readback_thread = threading.Thread(target=readback)
+readback_thread.daemon = True
+readback_thread.start()
+
 while True:
     time.sleep(0.01)
+    ser.write("echo -e \"0,1,2,3,4,5,6,7,8,9,0,0,0,0,0,0\">/tmp/can_write.txt\r\n".encode())
     readback()
 
 
