@@ -105,6 +105,10 @@ def A2B_play():
     # ser.write("aout_a2b_Amp.sh\r\n".encode())
     ser.write("aout_a2b2.sh T01_MENUETTO.wav\r\n".encode())
 
+def A2B2_play():
+    print("A2B2 PLAY START >>>")
+    # ser.write("aout_a2b_Amp.sh\r\n".encode())
+    ser.write("Play_A2B2\r\n".encode())
     
 def A2B_AMP_play():
     print("A2B PLAY START >>>")
@@ -124,7 +128,37 @@ def A2B_record():
 def STOP_aout():
     print("A2B STOP >>>")
     ser.write("stop_a2b.sh\r\n".encode())
+    
+def amp_record():
+    #ser.write("aout_a2b_Amp.sh T01_MENUETTO.wav\r\n".encode())
+    #time.sleep(2)
+    ser.write("reg_a2b_Amp.sh\r\n".encode())
+    #ser.write("i2cset -y -f 7 0x68 0x60 0x03\r\n".encode())
+    #time.sleep(0.5)
 
+    ser.write("alsaucm -n -b - << EOM\r\n".encode())
+    time.sleep(0.5)
+    ser.write("open sa8255-adp-star-snd-card\r\n".encode())
+    time.sleep(0.5)
+    ser.write("set _verb Record2\r\n".encode())
+    time.sleep(0.5)
+    ser.write("EOM\r\n".encode())
+    time.sleep(0.5)
+    ser.write("arecord -Dagm:1,103 -f S16_LE -c 2 -r 48000 /home/root/test_amp_record.wav &\r\n".encode())
+    time.sleep(0.5)
+    '''
+    ser.write("\r\n".encode())
+    time.sleep(0.5)
+    ser.write("alsaucm -n -b - << EOM\r\n".encode())
+    time.sleep(0.5)
+    ser.write("open sa8255-adp-star-snd-card\r\n".encode())
+    time.sleep(0.5)
+    ser.write("set _verb Record2\r\n".encode())
+    time.sleep(0.5)
+    ser.write("EOM\r\n".encode())
+    time.sleep(0.5)
+    ser.write("aplay -Dagm:1,0 /data/T01_MENUETTO.wav &\r\n".encode())
+    '''
 def CAN_send():
     ser.write("echo -e \"0,1,2,3,4,5,6,7,8,9,0,0,0,0,0,0\">/tmp/can_write.txt\r\n".encode())
     ser.write("CAN_Message_Send\r\n".encode())
@@ -428,10 +462,10 @@ def create_gui():
     button24 = tk.Button(tab1, text="CAN ECHOBACK", command=can_echo)
     button24.place(x=850, y=190, width=200, height=50)
 
-    button25 = tk.Button(tab1, text="RESERVE", command=usb_mode)
+    button25 = tk.Button(tab1, text="PLAY A2B2", command=A2B2_play)
     button25.place(x=850, y=250, width=200, height=50)
 
-    button26 = tk.Button(tab1, text="RESERVE", command=usb_mode)
+    button26 = tk.Button(tab1, text="AMP RECORD", command=amp_record)
     button26.place(x=850, y=310, width=200, height=50)
 
     # Create toggle button
