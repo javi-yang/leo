@@ -64,6 +64,7 @@ def readback():
 def process_queue():
     while not data_queue.empty():
         data = data_queue.get()
+        #print(data)
         display_message(data)
         if button_reserve.config('bg')[-1] == 'orange':
             with open('/home/javi/leo_share/log.txt', 'a') as log_file:
@@ -257,7 +258,14 @@ def func_004():
     time.sleep(0.5)
     ser.write("i2cget -y -f 7 0x68 0x17\r\n".encode())
 
-def power_interrupt():
+def func_list():
+
+    with open('/home/javi/leogit/trans/reg/reg_test.txt', 'r') as f:
+        for line in f.readlines():
+            ser.write(line.encode())
+
+
+def power_interrupt():    
     GPIO.output(7,1)
     time.sleep(interval_time)
     GPIO.output(7,0)
@@ -271,11 +279,15 @@ def update_interval_time():
         messagebox.showerror("数呢哥们？", "你得输个数.")
 
 def toggle_button_power():
+
     if button_power.config('bg')[-1] == 'orange':
         button_power.config(bg="gray", activebackground="gray")
         GPIO.output(7, 1)
     else:
         button_power.config(bg="orange", activebackground="orange")
+        text_area.config(state=tk.NORMAL)
+        text_area.delete("1.0", tk.END)
+        text_area.config(state=tk.DISABLED)
         GPIO.output(7, 0)
 
 def toggle_button_reserve():
@@ -347,11 +359,13 @@ def display_message(message):
     text_area.config(state=tk.NORMAL)
     text_area.insert(tk.END, message + "\n")
     text_area.see(tk.END)
-    text_area.config(state=tk.DISABLED)
+    
     # Limit the number of lines to 500
     lines = text_area.get("1.0", tk.END).split("\n")
-    if len(lines) > 500:
-        text_area.delete("1.0", "2.0")
+    #if len(lines) > 1000:
+    #    text_area.delete("1.0", "200.0")
+    #print(len(lines))
+    text_area.config(state=tk.DISABLED)
 
 def ser_i2c_read_command():
     command = "i2cget -y -f " + input1.get() + " 0x" + input2.get() + " 0x" + input3.get() + "\r\n"
