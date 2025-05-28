@@ -133,7 +133,7 @@ def STOP_aout():
 def amp_record():
     #ser.write("aout_a2b_Amp.sh T01_MENUETTO.wav\r\n".encode())
     #time.sleep(2)
-    ser.write("reg_a2b_Amp.sh\r\n".encode())
+    #ser.write("reg_a2b_Amp.sh\r\n".encode())
     #ser.write("i2cset -y -f 7 0x68 0x60 0x03\r\n".encode())
     #time.sleep(0.5)
 
@@ -592,16 +592,16 @@ def create_gui():
     bt_address = tk.Entry(tab2, width=20)
     bt_address.place(x=100, y=130, width=300, height=30)
 
-    button27 = tk.Button(tab2, text="DEFAULT", command=default_message)
+    button27 = tk.Button(tab2, text="TEST CMD 1", command=test_cmd_1)
     button27.place(x=10, y=170, width=200, height=50)
-    button28 = tk.Button(tab2, text="TEST CMD 1", command=test_cmd_1)
+    button28 = tk.Button(tab2, text="TEST CMD 2", command=test_cmd_2)
     button28.place(x=220, y=170, width=200, height=50)
-    button29 = tk.Button(tab2, text="TEST CMD 2", command=test_cmd_2)
+    button29 = tk.Button(tab2, text="TEST CMD 3", command=test_cmd_3)
     button29.place(x=430, y=170, width=200, height=50)
-    button30 = tk.Button(tab2, text="TEST CMD 3", command=test_cmd_3)
+    button30 = tk.Button(tab2, text="TEST CMD 4", command=test_cmd_4)
     button30.place(x=640, y=170, width=200, height=50)
-    button31 = tk.Button(tab2, text="TEST CMD 4", command=test_cmd_4)
-    button31.place(x=750, y=170, width=200, height=50)
+    button31 = tk.Button(tab2, text="TEST CMD 5", command=test_cmd_5)
+    button31.place(x=850, y=170, width=200, height=50)
 
 
 
