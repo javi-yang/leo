@@ -264,6 +264,28 @@ def func_list():
         for line in f.readlines():
             ser.write(line.encode())
 
+def test_cmd_1():
+
+    with open('/home/javi/leogit/trans/test_cmd/test_cmd_1.txt', 'r') as f:
+        for line in f.readlines():
+            ser.write(line.encode())
+
+def test_cmd_2():
+    with open('/home/javi/leogit/trans/test_cmd/test_cmd_2.txt', 'r') as f:
+        for line in f.readlines():
+            ser.write(line.encode())
+def test_cmd_3():
+    with open('/home/javi/leogit/trans/test_cmd/test_cmd_3.txt', 'r') as f:
+        for line in f.readlines():
+            ser.write(line.encode())
+def test_cmd_4():
+    with open('/home/javi/leogit/trans/test_cmd/test_cmd_4.txt', 'r') as f:
+        for line in f.readlines():
+            ser.write(line.encode())
+def test_cmd_5():
+    with open('/home/javi/leogit/trans/test_cmd/test_cmd_5.txt', 'r') as f:
+        for line in f.readlines():
+            ser.write(line.encode())
 
 def power_interrupt():    
     GPIO.output(7,1)
@@ -569,6 +591,30 @@ def create_gui():
     tk.Label(tab2, text="BT:").place(x=10, y=130)
     bt_address = tk.Entry(tab2, width=20)
     bt_address.place(x=100, y=130, width=300, height=30)
+
+    button27 = tk.Button(tab2, text="DEFAULT", command=default_message)
+    button27.place(x=10, y=170, width=100, height=30)
+
+    button28 = tk.Button(tab2, text="TEST CMD 1", command=test_cmd_1)
+    button28.place(x=120, y=170, width=100, height=30)
+    button29 = tk.Button(tab2, text="TEST CMD 2", command=test_cmd_2)
+    button29.place(x=230, y=170, width=100, height=30)
+    button30 = tk.Button(tab2, text="TEST CMD 3", command=test_cmd_3)
+    button30.place(x=340, y=170, width=100, height=30)
+    button31 = tk.Button(tab2, text="TEST CMD 4", command=test_cmd_4)
+    button31.place(x=450, y=170, width=100, height=30)
+    button32 = tk.Button(tab2, text="TEST CMD 5", command=test_cmd_5)
+    button32.place(x=10, y=210, width=100, height=30)
+    button33 = tk.Button(tab2, text="SERIAL I2C READ", command=ser_i2c_read_command)
+    button33.place(x=120, y=210, width=100, height=30)
+    button34 = tk.Button(tab2, text="SERIAL I2C SEND", command=ser_i2c_send_command)
+    button34.place(x=230, y=210, width=100, height=30)
+    button35 = tk.Button(tab2, text="SERIAL I2C DUMP", command=ser_i2c_dump_command)
+    button35.place(x=340, y=210, width=100, height=30)
+    button36 = tk.Button(tab2, text="SERIAL TUNER TEST", command=tuner_test)
+    button36.place(x=450, y=210, width=100, height=30)
+    button37 = tk.Button(tab2, text="SERIAL TUNER OUT AMP", command=tuner_out_amp)
+
 
 
 
