@@ -1,0 +1,1 @@
+qcarcam_test -config=/usr/share/camera/yuv_usecase_0.xml

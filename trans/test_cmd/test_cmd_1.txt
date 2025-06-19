@@ -1,0 +1,12 @@
+
+aplay_a2b2.sh > aplay.txt 2>&1 &
+
+reg_a2b_Amp.sh > reg1.txt 2>&1
+
+alsaucm -n -b - << EOM
+open sa8255-adp-star-snd-card
+set _verb Record2
+EOM
+
+
+arecord -Dagm:1,103 -f S16_LE -c 2 -r 48000 /home/root/testrecord.wav

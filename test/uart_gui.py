@@ -50,21 +50,35 @@ data_queue = Queue()
 def readback():
     while True:
         count = ser.inWaiting()
-        time.sleep(0.01)
+        
         if count != 0:
             data = ser.readline()
             data = data.strip()
             data = bytes.decode(data, errors="ignore")
             data_queue.put(data)
+            #print(data)
             if 'lemans login:' in data:
                 lemans_login()
         else:
             break
 
+def root_lemans():
+    data = '1'
+    while 'lemans' not in data:
+        count = ser.inWaiting()
+        
+        if count != 0:
+            data = ser.readline()
+            data = data.strip()
+            data = bytes.decode(data, errors="ignore")
+            data_queue.put(data)
+            print(data)
+      
 def process_queue():
     while not data_queue.empty():
         data = data_queue.get()
-        display_message(data)
+        print(data)
+        #display_message(data)
         if button_reserve.config('bg')[-1] == 'orange':
             with open('/home/javi/leo_share/log.txt', 'a') as log_file:
                 log_file.write(data + '\n')
@@ -105,6 +119,10 @@ def A2B_play():
     # ser.write("aout_a2b_Amp.sh\r\n".encode())
     ser.write("aout_a2b2.sh T01_MENUETTO.wav\r\n".encode())
 
+def A2B2_play():
+    print("A2B2 PLAY START >>>")
+    # ser.write("aout_a2b_Amp.sh\r\n".encode())
+    ser.write("Play_A2B2\r\n".encode())
     
 def A2B_AMP_play():
     print("A2B PLAY START >>>")
@@ -125,12 +143,36 @@ def STOP_aout():
     print("A2B STOP >>>")
     ser.write("stop_a2b.sh\r\n".encode())
     
-def cpu_stress():
-    time.sleep(40)
-    ser.write("CPU_Stress 70 30\r\n".encode())
-    time.sleep(35)
-    ser.write("CPU_Stress 70 30\r\n".encode())
+def amp_record():
+    ser.write("aplay_a2b2.sh > aplay.txt 2>&1 &\r\n".encode())
+    #time.sleep(2)
+    #ser.write("reg_a2b_Amp.sh\r\n".encode())
+    ser.write("reg_a2b_Amp.sh > reg1.txt 2>&1\r\n".encode())
+    #time.sleep(0.5)
 
+    ser.write("alsaucm -n -b - << EOM\r\n".encode())
+    time.sleep(0.5)
+    ser.write("open sa8255-adp-star-snd-card\r\n".encode())
+    time.sleep(0.5)
+    ser.write("set _verb Record2\r\n".encode())
+    time.sleep(0.5)
+    ser.write("EOM\r\n".encode())
+    time.sleep(5)
+    ser.write("arecord -Dagm:1,103 -f S16_LE -c 2 -r 48000 /home/root/test_amp_record.wav &\r\n".encode())
+    time.sleep(0.5)
+    '''
+    ser.write("\r\n".encode())
+    time.sleep(0.5)
+    ser.write("alsaucm -n -b - << EOM\r\n".encode())
+    time.sleep(0.5)
+    ser.write("open sa8255-adp-star-snd-card\r\n".encode())
+    time.sleep(0.5)
+    ser.write("set _verb Record2\r\n".encode())
+    time.sleep(0.5)
+    ser.write("EOM\r\n".encode())
+    time.sleep(0.5)
+    ser.write("aplay -Dagm:1,0 /data/T01_MENUETTO.wav &\r\n".encode())
+    '''
 def CAN_send():
     ser.write("echo -e \"0,1,2,3,4,5,6,7,8,9,0,0,0,0,0,0\">/tmp/can_write.txt\r\n".encode())
     ser.write("CAN_Message_Send\r\n".encode())
@@ -158,8 +200,14 @@ def I2C_dump():
     ser.write("i2cdump -y -f 7 0x69\r\n".encode())
     # ser.write("i2cdetect -a\r\n".encode())
 
-def func_002():
-    ser.write("i2cget -y -f 7 0x68 0x17\r\n".encode())
+def ctrl_c():
+    ser.write("\003\r\n".encode())
+
+def callback_b():
+    ser.write("\038\r\n".encode())
+
+def callback_f():
+    ser.write("\025\r\n".encode())
 
 def I2C_set():
     ser.write("i2cset -y -f 7 0x68 0x11 0x23\r\n".encode())
@@ -168,14 +216,68 @@ def tuner_out_amp():
     ser.write("tuner_out_Amp.sh\r\n".encode())
 
 def tuner_test():
-    ser.write("tunertest_client.sh\r\n".encode())
+    ser.write("tunertest_client\r\n".encode())
     time.sleep(1)
+    readback()
     ser.write("1\r\n".encode())
     time.sleep(0.5)
+    readback()
     ser.write("1\r\n".encode())
     time.sleep(0.5)
+    readback()
     ser.write("98100\r\n".encode())
 
+def aout_amp_1k():
+    ser.write("aout_a2b_Amp.sh T02_1KHZ_SINE_WAVE.wav\r\n".encode())
+
+
+def bt_out():
+    ser.write("BT_Pair F0:C8:50:33:B5:E2\r\n".encode())
+    time.sleep(10)
+    #root_lemans()
+    readback()
+    time.sleep(3)
+    ser.write("BT_Connect F0:C8:50:33:B5:E2\r\n".encodereadback())
+    time.sleep(10)
+    readback()
+    time.sleep(10)
+    ser.write("aout_bt.sh F0:C8:50:33:B5:E2\r\n".encode())
+    
+    
+    
+    
+def lvds_low():
+    ser.write("i2cset -y -f 7 0x68 0x30 0x83\r\n".encode())
+    time.sleep(1)
+    ser.write("i2cset -y -f 7 0x68 0x01 0x00\r\n".encode())
+    time.sleep(1)
+    ser.write("i2cset -y -f 7 0x69 0x2E 0x83\r\n".encode())
+    time.sleep(1)
+    ser.write("i2cget -y -f 7 0x69 0x2E\r\n".encode())
+
+def can_echo():
+    ser.write("CAN_Echoback\r\n".encode())
+
+def eth_test():
+    ser.write("ifconfig eth0 192.168.110.2\r\n".encode())
+    '''
+    global eth_address
+    cmd_eth = "ifconfig eth0 " + eth_address + "\r\n"
+    ser.write(cmd_eth.encode())
+    time.sleep(0.5)
+    readback()
+    ser.write("iperf3 -s\r\n".encode())
+    '''
+def iperf3_s():
+    ser.write("iperf3 -s & iperf3 -c 192.168.3.7 -p 5202 -t 1000\r\n".encode())
+def iperf3_s_wifi():
+    ser.write("iperf3 -c 192.168.3.7 -p 5202 -t 1000\r\n".encode())
+def iperf3_s_eth():
+    ser.write("iperf3 -s\r\n".encode())
+def op_mode_max():
+    ser.write("Set_OpMode_Max\r\n".encode())
+def wifi_connect():
+    ser.write("wifi_connect DHU_5G 12345678\r\n".encode())
 def terminal():
     '''
     os.system('i2cdump -y -f 1 0x10')
@@ -191,7 +293,41 @@ def func_004():
     time.sleep(0.5)
     ser.write("i2cget -y -f 7 0x68 0x17\r\n".encode())
 
-def power_interrupt():
+def func_list():
+
+    with open('/home/javi/leogit/trans/reg/reg_test.txt', 'r') as f:
+        for line in f.readlines():
+            ser.write(line.encode())
+
+def test_cmd_1():
+
+    with open('/home/javi/leogit/trans/test_cmd/test_cmd_1.txt', 'r') as f:
+        for line in f.readlines():
+            ser.write(line.encode())
+            time.sleep(2)
+
+def test_cmd_2():
+    with open('/home/javi/leogit/trans/test_cmd/test_cmd_2.txt', 'r') as f:
+        for line in f.readlines():
+            ser.write(line.encode())
+            ser.write("\r\n".encode())
+def test_cmd_3():
+    with open('/home/javi/leogit/trans/test_cmd/test_cmd_3.txt', 'r') as f:
+        for line in f.readlines():
+            ser.write(line.encode())
+            ser.write("\r\n".encode())
+def test_cmd_4():
+    with open('/home/javi/leogit/trans/test_cmd/test_cmd_4.txt', 'r') as f:
+        for line in f.readlines():
+            ser.write(line.encode())
+            ser.write("\r\n".encode())
+def test_cmd_5():
+    with open('/home/javi/leogit/trans/test_cmd/test_cmd_5.txt', 'r') as f:
+        for line in f.readlines():
+            ser.write(line.encode())
+            ser.write("\r\n".encode())
+
+def power_interrupt():    
     GPIO.output(7,1)
     time.sleep(interval_time)
     GPIO.output(7,0)
@@ -205,11 +341,15 @@ def update_interval_time():
         messagebox.showerror("数呢哥们？", "你得输个数.")
 
 def toggle_button_power():
+
     if button_power.config('bg')[-1] == 'orange':
         button_power.config(bg="gray", activebackground="gray")
         GPIO.output(7, 1)
     else:
         button_power.config(bg="orange", activebackground="orange")
+        text_area.config(state=tk.NORMAL)
+        text_area.delete("1.0", tk.END)
+        text_area.config(state=tk.DISABLED)
         GPIO.output(7, 0)
 
 def toggle_button_reserve():
@@ -281,11 +421,13 @@ def display_message(message):
     text_area.config(state=tk.NORMAL)
     text_area.insert(tk.END, message + "\n")
     text_area.see(tk.END)
-    text_area.config(state=tk.DISABLED)
+    
     # Limit the number of lines to 500
     lines = text_area.get("1.0", tk.END).split("\n")
-    if len(lines) > 500:
-        text_area.delete("1.0", "2.0")
+    #if len(lines) > 1000:
+    #    text_area.delete("1.0", "200.0")
+    #print(len(lines))
+    text_area.config(state=tk.DISABLED)
 
 def ser_i2c_read_command():
     command = "i2cget -y -f " + input1.get() + " 0x" + input2.get() + " 0x" + input3.get() + "\r\n"
@@ -344,7 +486,7 @@ def create_gui():
     button7 = tk.Button(tab1, text="A2B AMP", command=A2B_AMP_play)
     button7.place(x=220, y=70, width=200, height=50)
 
-    button8 = tk.Button(tab1, text="A2B Play", command=A2B_play)
+    button8 = tk.Button(tab1, text="IPERF3 -S", command=iperf3_s)
     button8.place(x=220, y=130, width=200, height=50)
 
     button9 = tk.Button(tab1, text="PWER INTRPT", command=power_interrupt)
@@ -353,7 +495,7 @@ def create_gui():
     button10 = tk.Button(tab1, text="CAN SEND", command=CAN_send)
     button10.place(x=220, y=250, width=200, height=50)
 
-    button11 = tk.Button(tab1, text="A2B Record", command=A2B_record)
+    button11 = tk.Button(tab1, text="WIFI CONNECT", command=wifi_connect)
     button11.place(x=220, y=310, width=200, height=50)
 
     button12 = tk.Button(tab1, text="I2C DUMP", command=I2C_dump)
@@ -368,24 +510,39 @@ def create_gui():
     button15 = tk.Button(tab1, text="TUNER TEST", command=tuner_test)
     button15.place(x=430, y=250, width=200, height=50)
 
-    button16 = tk.Button(tab1, text="TERMINAL", command=terminal)
+    button16 = tk.Button(tab1, text="BT OUT", command=bt_out)
     button16.place(x=430, y=310, width=200, height=50)
 
     # Add the copied buttons to the right of the existing buttons
-    button17 = tk.Button(tab1, text="I2C DUMP", command=I2C_dump)
+    button17 = tk.Button(tab1, text="OP MODE MAX", command=op_mode_max)
     button17.place(x=640, y=70, width=200, height=50)
 
-    button18 = tk.Button(tab1, text="I2C SET", command=I2C_set)
+    button18 = tk.Button(tab1, text="1KHZ", command=aout_amp_1k)
     button18.place(x=640, y=130, width=200, height=50)
 
-    button19 = tk.Button(tab1, text="CPU STRESS", command=cpu_stress)
+    button19 = tk.Button(tab1, text="CTRL+C", command=ctrl_c)
     button19.place(x=640, y=190, width=200, height=50)
 
-    button20 = tk.Button(tab1, text="FUNC 004", command=func_004)
+    button20 = tk.Button(tab1, text="ETHERNET", command=eth_test)
     button20.place(x=640, y=250, width=200, height=50)
 
-    button21 = tk.Button(tab1, text="TERMINAL", command=terminal)
+    button21 = tk.Button(tab1, text="LVDS LOW", command=lvds_low)
     button21.place(x=640, y=310, width=200, height=50)
+
+    button22 = tk.Button(tab1, text="IPERF3 ETH", command=iperf3_s_eth)
+    button22.place(x=850, y=70, width=200, height=50)
+
+    button23 = tk.Button(tab1, text="IPERF3 WIFI", command=iperf3_s_wifi)
+    button23.place(x=850, y=130, width=200, height=50)
+
+    button24 = tk.Button(tab1, text="CAN ECHOBACK", command=can_echo)
+    button24.place(x=850, y=190, width=200, height=50)
+
+    button25 = tk.Button(tab1, text="BACK", command=callback_b)
+    button25.place(x=850, y=250, width=200, height=50)
+
+    button26 = tk.Button(tab1, text="FORWARD", command=callback_f)
+    button26.place(x=850, y=310, width=200, height=50)
 
     # Create toggle button
     global button_power
@@ -475,12 +632,25 @@ def create_gui():
     bt_address = tk.Entry(tab2, width=20)
     bt_address.place(x=100, y=130, width=300, height=30)
 
+    button27 = tk.Button(tab2, text="TEST CMD 1", command=test_cmd_1)
+    button27.place(x=10, y=170, width=200, height=50)
+    button28 = tk.Button(tab2, text="TEST CMD 2", command=test_cmd_2)
+    button28.place(x=220, y=170, width=200, height=50)
+    button29 = tk.Button(tab2, text="TEST CMD 3", command=test_cmd_3)
+    button29.place(x=430, y=170, width=200, height=50)
+    button30 = tk.Button(tab2, text="TEST CMD 4", command=test_cmd_4)
+    button30.place(x=640, y=170, width=200, height=50)
+    button31 = tk.Button(tab2, text="TEST CMD 5", command=test_cmd_5)
+    button31.place(x=850, y=170, width=200, height=50)
+
+
+
 
 
     # Create text area for displaying messages
     global text_area
     text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
-    text_area.place(x=10, y=560, width=1180, height=320)
+    text_area.place(x=10, y=560, width=1180, height=250)
 
     root.after(100, process_queue)  # Start processing the queue
 
@@ -495,6 +665,7 @@ gui_thread.daemon = True
 gui_thread.start()
 
 while True:
+    time.sleep(0.01)
     readback()
 
 
