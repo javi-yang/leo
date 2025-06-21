@@ -67,28 +67,17 @@ def readback():
         else:
             break
 
-def root_lemans():
-    data = '1'
-    w = 0
-    while 'lemans' not in data:
-        
-        try:
-            count = ser.inWaiting()
-            if count != 0:
-                data = ser.readline()
-                data = data.strip()
-                data = bytes.decode(data, errors="ignore")
-                #data_queue.put(data)
-                print(data)
-        
-                w += 1
-        except:
-            pass
-        if w == 10:
+def wait_lemans():
+    global lemans
+    count = 0
+    lemans = True
+    while lemans:
+        readback()
+        time.sleep(1)
+        count += 1
+        if count > 30:
             ser.write("\r\n".encode())
-            w = 0
-            #time.sleep(1)
-            
+            count = 0          
       
 def process_queue():
     while not data_queue.empty():
@@ -256,18 +245,12 @@ def aout_amp_1k():
 
 
 def bt_out():
-    global lemans
-    readback()
-    lemans = True
+
     ser.write("BT_Pair F0:C8:50:33:B5:E2\r\n".encode())
-    while lemans:
-        readback()
+    wait_lemans()
     time.sleep(5)
-    readback()
-    lemans = True
     ser.write("BT_Connect F0:C8:50:33:B5:E2\r\n".encode())
-    while lemans:
-        readback()
+    wait_lemans()
     time.sleep(15)
     ser.write("aout_bt.sh F0:C8:50:33:B5:E2\r\n".encode())
     
@@ -475,7 +458,7 @@ def create_gui():
     # Create the main window
     root = tk.Tk()
     root.title("UART Control")
-    root.geometry("1200x900")  # Set default window size
+    root.geometry("1200x700")  # Set default window size
 
     # Create a style for the Notebook tabs
     style = ttk.Style()
@@ -582,6 +565,18 @@ def create_gui():
     button_reserve = tk.Button(tab1, text="RESERVE", command=toggle_button_reserve, bg="gray", activebackground="gray")
     button_reserve.place(x=430, y=10, width=200, height=50)
 
+    # Create region selection buttons
+    global region_var
+    region_var = tk.StringVar(value="EU")
+    region_frame = tk.Frame(tab1)
+    region_frame.place(x=640, y=10, width=320, height=50)
+
+    regions = [("EU", "EU"), ("US", "US"), ("JP", "JP"), ("ROW", "ROW")]
+    for i, (text, value) in enumerate(regions):
+        rb = tk.Radiobutton(region_frame, text=text, variable=region_var, value=value, indicatoron=1)
+        rb.pack(side=tk.LEFT, padx=10, pady=10)
+
+
     # Create input field and ENTER button
     global entry
     entry = tk.Entry(tab1)
@@ -675,11 +670,10 @@ def create_gui():
 
 
 
-
     # Create text area for displaying messages
     global text_area
     text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
-    text_area.place(x=10, y=560, width=1180, height=250)
+    text_area.place(x=10, y=560, width=1180, height=100)
 
     root.after(100, process_queue)  # Start processing the queue
 
@@ -695,7 +689,17 @@ gui_thread.start()
 
 while True:
     time.sleep(0.01)
-    readback()
+    readback()    # ...existing code...
+    global region_var
+    region_var = tk.StringVar(value="EU")
+    region_frame = tk.Frame(tab1)
+    region_frame.place(x=640, y=10, width=320, height=50)
+    
+    regions = [("EU", "EU"), ("US", "US"), ("JP", "JP"), ("ROW", "ROW")]
+    for i, (text, value) in enumerate(regions):
+        rb = tk.Radiobutton(region_frame, text=text, variable=region_var, value=value, indicatoron=1)
+        rb.pack(side=tk.LEFT, padx=10, pady=10)
+    # ...existing code...
 
 
 
