@@ -47,6 +47,8 @@ interval_time = 0.3
 # Create a queue to buffer incoming data
 data_queue = Queue()
 
+lemans = True
+
 def readback():
     global lemans
     while True:
@@ -61,7 +63,7 @@ def readback():
             if 'lemans login:' in data:
                 lemans_login()
             elif 'lemans' in data:
-                lemans = True
+                lemans = False
         else:
             break
 
@@ -254,17 +256,20 @@ def aout_amp_1k():
 
 
 def bt_out():
-    ser.write("BT_Pair F0:C8:50:33:B5:E2\r\n".encode())
-    time.sleep(1)
-    root_lemans()
+    global lemans
     readback()
-    time.sleep(1)
+    lemans = True
+    ser.write("BT_Pair F0:C8:50:33:B5:E2\r\n".encode())
+    while lemans:
+        readback()
+    time.sleep(5)
+    readback()
+    lemans = True
     ser.write("BT_Connect F0:C8:50:33:B5:E2\r\n".encode())
-    time.sleep(1)
-    root_lemans()
-    time.sleep(1)
+    while lemans:
+        readback()
+    time.sleep(15)
     ser.write("aout_bt.sh F0:C8:50:33:B5:E2\r\n".encode())
-    root_lemans()
     
 def dmesg():
     ser.write("dmesg -n 1\r\n".encode()) 
