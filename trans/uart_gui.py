@@ -423,6 +423,10 @@ def on_key_down(event=None):
         current_message_index = (current_message_index + 1) % len(last_messages)
         entry.delete(0, tk.END)
         entry.insert(0, last_messages[current_message_index])
+        
+def get_vari_value():
+    value = vari_entry.get().strip()
+    return value if value else "US"
 
 def display_message(message):
     global filter1_active, filter1_text, filter2_active, filter2_text
@@ -565,17 +569,12 @@ def create_gui():
     button_reserve = tk.Button(tab1, text="RESERVE", command=toggle_button_reserve, bg="gray", activebackground="gray")
     button_reserve.place(x=430, y=10, width=200, height=50)
 
-    # Create region selection buttons
-    global region_var
-    region_var = tk.StringVar(value="EU")
-    region_frame = tk.Frame(tab1)
-    region_frame.place(x=640, y=10, width=320, height=50)
-
-    regions = [("EU", "EU"), ("US", "US"), ("JP", "JP"), ("ROW", "ROW")]
-    for i, (text, value) in enumerate(regions):
-        rb = tk.Radiobutton(region_frame, text=text, variable=region_var, value=value, indicatoron=1)
-        rb.pack(side=tk.LEFT, padx=10, pady=10)
-
+    # Add "VARI:" label and entry to the right of button_reserve
+    tk.Label(tab1, text="VARI:").place(x=640, y=20)
+    global vari_entry
+    vari_entry = tk.Entry(tab1)
+    vari_entry.place(x=700, y=15, width=80, height=30)
+    vari_entry.insert(0, "US")  # Default value
 
     # Create input field and ENTER button
     global entry
