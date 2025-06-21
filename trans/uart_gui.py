@@ -423,7 +423,7 @@ def on_key_down(event=None):
         current_message_index = (current_message_index + 1) % len(last_messages)
         entry.delete(0, tk.END)
         entry.insert(0, last_messages[current_message_index])
-        
+
 def get_vari_value():
     value = vari_entry.get().strip()
     return value if value else "US"
@@ -688,17 +688,4 @@ gui_thread.start()
 
 while True:
     time.sleep(0.01)
-    readback()    # ...existing code...
-    global region_var
-    region_var = tk.StringVar(value="EU")
-    region_frame = tk.Frame(tab1)
-    region_frame.place(x=640, y=10, width=320, height=50)
-    
-    regions = [("EU", "EU"), ("US", "US"), ("JP", "JP"), ("ROW", "ROW")]
-    for i, (text, value) in enumerate(regions):
-        rb = tk.Radiobutton(region_frame, text=text, variable=region_var, value=value, indicatoron=1)
-        rb.pack(side=tk.LEFT, padx=10, pady=10)
-    # ...existing code...
-
-
-
+    readback()
