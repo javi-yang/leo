@@ -48,6 +48,7 @@ interval_time = 0.3
 data_queue = Queue()
 
 def readback():
+    global lemans
     while True:
         count = ser.inWaiting()
         
@@ -59,6 +60,8 @@ def readback():
             print(data)
             if 'lemans login:' in data:
                 lemans_login()
+            elif 'lemans' in data:
+                lemans = True
         else:
             break
 
@@ -215,7 +218,7 @@ def usb_test():
     ser.write("UFS_cycle 1\r\n".encode())
     
 def camera():
-    ser.write("qcarcam_test -config=/usr/share/camera/yuv_usecase_0.xml\r\n".encode())
+    ser.write("nohup qcarcam_test -config=/usr/share/camera/yuv_usecase_0.xml > /tmp/rgb_logs.txt &\r\n".encode())
 
 def ctrl_c():
     ser.write("\003\r\n".encode())
