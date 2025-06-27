@@ -290,9 +290,10 @@ def op_mode_max():
     ser.write("Set_OpMode_Max\r\n".encode())
 def wifi_connect():
     global vari_entry
-    if vari_entry == "US":
+    vari_value = get_vari_value()
+    if vari_value == "US":
         ser.write("wifi_connect DHU_5G 12345678\r\n".encode())
-    elif vari_entry == "EU":
+    elif vari_value == "EU":
         ser.write("wifi_connect DHU 12345678\r\n".encode())
     else:
         ser.write("wifi_connect DHU 12345678\r\n".encode())
@@ -560,7 +561,7 @@ def create_gui():
     button20 = tk.Button(tab1, text="ETHERNET", command=eth_test)
     button20.place(x=640, y=250, width=200, height=50)
 
-    button21 = tk.Button(tab1, text="LVDS LOW", command=lvds_low)
+    button21 = tk.Button(tab1, text="TEST FLOW", command=test_flow)
     button21.place(x=640, y=310, width=200, height=50)
 
     button22 = tk.Button(tab1, text="IPERF3 ETH", command=iperf3_s_eth)
