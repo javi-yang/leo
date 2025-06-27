@@ -289,7 +289,14 @@ def iperf3_s_eth():
 def op_mode_max():
     ser.write("Set_OpMode_Max\r\n".encode())
 def wifi_connect():
-    ser.write("wifi_connect DHU_5G 12345678\r\n".encode())
+    global vari_entry
+    if vari_entry == "US":
+        ser.write("wifi_connect DHU_5G 12345678\r\n".encode())
+    elif vari_entry == "EU":
+        ser.write("wifi_connect DHU 12345678\r\n".encode())
+    else:
+        ser.write("wifi_connect DHU 12345678\r\n".encode())
+    
 def terminal():
     '''
     os.system('i2cdump -y -f 1 0x10')
@@ -338,6 +345,17 @@ def test_cmd_5():
         for line in f.readlines():
             ser.write(line.encode())
             ser.write("\r\n".encode())
+
+def test_flow():
+    op_mode_max
+    wait_lemans()
+    usb_mode()
+    wait_lemans()
+    wifi_connect()
+    wait_lemans()
+    eth_test()
+    wait_lemans()
+
 
 def power_interrupt():    
     GPIO.output(7,1)
