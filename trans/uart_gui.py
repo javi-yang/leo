@@ -227,18 +227,25 @@ def tuner_out_amp():
     ser.write("tuner_out_Amp.sh\r\n".encode())
 
 def tuner_test():
+    vari_value = get_vari_value()
     ser.write("tunertest_client\r\n".encode())
-    '''
     time.sleep(1)
-    readback()
     ser.write("1\r\n".encode())
-    time.sleep(0.5)
-    readback()
-    ser.write("1\r\n".encode())
-    time.sleep(0.5)
-    readback()
-    ser.write("98100\r\n".encode())
-    '''
+
+    if "US" in vari_value:
+        ser.write("9\r\n".encode())
+
+    elif "EU" in vari_value:
+        ser.write("8\r\n".encode())
+        time.sleep(1)
+        ser.write("174928\r\n".encode())
+
+    elif "JP" in vari_value:
+        ser.write("1\r\n".encode())
+        time.sleep(1)
+        ser.write("83500\r\n".encode())
+
+
 
 def aout_amp_1k():
     ser.write("aout_a2b_Amp.sh T02_1KHZ_SINE_WAVE.wav\r\n".encode())
@@ -291,9 +298,9 @@ def op_mode_max():
 def wifi_connect():
     global vari_entry
     vari_value = get_vari_value()
-    if vari_value == "US":
+    if "US" in vari_value:
         ser.write("wifi_connect DHU_5G 12345678\r\n".encode())
-    elif vari_value == "EU":
+    elif "EU" in vari_value:
         ser.write("wifi_connect DHU 12345678\r\n".encode())
     else:
         ser.write("wifi_connect DHU 12345678\r\n".encode())
@@ -348,15 +355,27 @@ def test_cmd_5():
             ser.write("\r\n".encode())
 
 def test_flow():
+    vari_value = get_vari_value()
     op_mode_max
     wait_lemans()
+    readback()
     usb_mode()
     wait_lemans()
+    readback()
     wifi_connect()
     wait_lemans()
+    readback()
     eth_test()
     wait_lemans()
-
+    readback()
+    camera()
+    if "TU" in vari_value:
+        tuner_out_amp()
+        time.sleep(1)
+        tuner_test()
+    elif "BT" in vari_value:
+        bt_out()
+    
 
 def power_interrupt():    
     GPIO.output(7,1)
