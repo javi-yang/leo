@@ -245,6 +245,11 @@ def tuner_test():
         time.sleep(1)
         ser.write("83500\r\n".encode())
 
+    else:
+        ser.write("1\r\n".encode())
+        time.sleep(1)
+        ser.write("98100\r\n".encode())
+
 
 
 def aout_amp_1k():
@@ -356,7 +361,8 @@ def test_cmd_5():
 
 def test_flow():
     vari_value = get_vari_value()
-    op_mode_max
+    dmesg()
+    op_mode_max()
     wait_lemans()
     readback()
     usb_mode()
@@ -369,6 +375,7 @@ def test_flow():
     wait_lemans()
     readback()
     camera()
+    
     if "TU" in vari_value:
         tuner_out_amp()
         time.sleep(1)
