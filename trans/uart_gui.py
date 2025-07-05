@@ -209,7 +209,10 @@ def usb_test():
     ser.write("UFS_cycle 1\r\n".encode())
     
 def camera():
-    ser.write("nohup qcarcam_test -config=/usr/share/camera/yuv_usecase_0.xml > /tmp/rgb_logs.txt &\r\n".encode())
+    ser.write("nohup qcarcam_test -config=/usr/share/camera/rgb_usecase_0.xml > /tmp/rgb_logs.txt &\r\n".encode())
+
+    #ser.write("qcarcam_test -config=/usr/share/camera/rgb_usecase_0.xml\r\n".encode())
+
 
 def ctrl_c():
     ser.write("\003\r\n".encode())
@@ -258,10 +261,10 @@ def aout_amp_1k():
 
 def bt_out():
 
-    ser.write("BT_Pair F0:C8:50:33:B5:E2\r\n".encode())
+    ser.write("bt_pair F0:C8:50:33:B5:E2\r\n".encode())
     wait_lemans()
     time.sleep(5)
-    ser.write("BT_Connect F0:C8:50:33:B5:E2\r\n".encode())
+    ser.write("bt_connect F0:C8:50:33:B5:E2\r\n".encode())
     wait_lemans()
     time.sleep(15)
     ser.write("aout_bt.sh F0:C8:50:33:B5:E2\r\n".encode())
@@ -362,19 +365,35 @@ def test_cmd_5():
 def test_flow():
     vari_value = get_vari_value()
     dmesg()
+    time.sleep(1)
+    readback()
+    can_echo()
+    wait_lemans()
+    time.sleep(1)
+    readback()
+    '''
     op_mode_max()
     wait_lemans()
     readback()
+    time.sleep(2)
+    '''
     usb_mode()
     wait_lemans()
     readback()
     wifi_connect()
     wait_lemans()
+    time.sleep(1)
     readback()
     eth_test()
     wait_lemans()
     readback()
     camera()
+    wait_lemans()
+    time.sleep(2)
+    readback()
+
+    time.sleep(1)
+    readback()
     
     if "TU" in vari_value:
         tuner_out_amp()
@@ -382,6 +401,14 @@ def test_flow():
         tuner_test()
     elif "BT" in vari_value:
         bt_out()
+    '''    
+    if "JP" in vari_value:
+        time.sleep(5)
+        readback()
+        ctrl_c()
+        wait_lemans()
+        usb_test()
+    '''   
     
 
 def power_interrupt():    
