@@ -758,6 +758,7 @@ gui_thread = threading.Thread(target=create_gui)
 gui_thread.daemon = True
 gui_thread.start()
 
-while True:
-    time.sleep(0.01)
-    readback()
+read_thread = threading.Thread(target=readback)
+read_thread.daemon = True
+read_thread.start()
+
