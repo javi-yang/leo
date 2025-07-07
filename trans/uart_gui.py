@@ -52,6 +52,7 @@ lemans = True
 def readback():
     global lemans
     while True:
+        time.sleep(0.01)
         count = ser.inWaiting()
         
         if count != 0:
@@ -64,15 +65,16 @@ def readback():
                 lemans_login()
             elif 'lemans' in data:
                 lemans = False
+        '''
         else:
             break
-
+        '''
 def wait_lemans():
     global lemans
     count = 0
     lemans = True
     while lemans:
-        readback()
+        #readback()
         time.sleep(1)
         count += 1
         if count > 30:
@@ -366,11 +368,11 @@ def test_flow():
     vari_value = get_vari_value()
     dmesg()
     time.sleep(1)
-    readback()
+    #readback()
     can_echo()
     wait_lemans()
     time.sleep(1)
-    readback()
+    #readback()
     '''
     op_mode_max()
     wait_lemans()
@@ -379,21 +381,21 @@ def test_flow():
     '''
     usb_mode()
     wait_lemans()
-    readback()
+    #readback()
     wifi_connect()
     wait_lemans()
     time.sleep(1)
-    readback()
+    #readback()
     eth_test()
     wait_lemans()
-    readback()
+    #readback()
     camera()
     wait_lemans()
     time.sleep(2)
-    readback()
+    #readback()
 
     time.sleep(1)
-    readback()
+    #readback()
     
     if "TU" in vari_value:
         tuner_out_amp()
@@ -759,6 +761,6 @@ gui_thread.daemon = True
 gui_thread.start()
 
 read_thread = threading.Thread(target=readback)
-read_thread.daemon = True
+#read_thread.daemon = True
 read_thread.start()
 
