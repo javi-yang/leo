@@ -1,0 +1,16 @@
+adb root
+adb remount
+adb shell
+mount -o remount,rw /
+systemctl disable synergy
+
+
+rfkill unblock wifi
+rmmod qca6698.ko
+insmod /lib/modules/5.15.144-debug/extra/qca6698.ko con_mode_ftm=5
+ifconfig wlan0 up
+ftmdaemon -n -dd
+
+myftm -J -B dbs
+
+myftm -J -I 1 -f 2412 --rstdir 0 --forcedrxidx 4 --caltxgain 0 --rst

@@ -15,6 +15,8 @@ import RPi.GPIO as GPIO
 from datetime import datetime
 from queue import Queue
 
+lock = threading.Lock()
+
 ser = serial.Serial("/dev/ttyUSB0", 115200, timeout=2)
 ser.flushInput()
 
@@ -72,14 +74,16 @@ def readback():
 def wait_lemans():
     global lemans
     count = 0
-    lemans = True
+    with lock:        
+        lemans = True
     while lemans:
         #readback()
         time.sleep(1)
         count += 1
         if count > 30:
             ser.write("\r\n".encode())
-            count = 0          
+            count = 0
+            
       
 def process_queue():
     while not data_queue.empty():
@@ -152,11 +156,10 @@ def STOP_aout():
     
 def amp_record():
     ser.write("aplay_a2b2.sh > aplay.txt 2>&1 &\r\n".encode())
-    #time.sleep(2)
+    wait_lemans()
     #ser.write("reg_a2b_Amp.sh\r\n".encode())
     ser.write("reg_a2b_Amp.sh > reg1.txt 2>&1\r\n".encode())
-    #time.sleep(0.5)
-
+    wait_lemans()
     ser.write("alsaucm -n -b - << EOM\r\n".encode())
     time.sleep(0.5)
     ser.write("open sa8255-adp-star-snd-card\r\n".encode())
@@ -164,9 +167,10 @@ def amp_record():
     ser.write("set _verb Record2\r\n".encode())
     time.sleep(0.5)
     ser.write("EOM\r\n".encode())
-    time.sleep(5)
+    wait_lemans()
+    time.sleep(2)
     ser.write("arecord -Dagm:1,103 -f S16_LE -c 2 -r 48000 /home/root/test_amp_record.wav &\r\n".encode())
-    time.sleep(0.5)
+    #time.sleep(0.5)
     '''
     ser.write("\r\n".encode())
     time.sleep(0.5)
@@ -310,8 +314,8 @@ def wifi_connect():
     vari_value = get_vari_value()
     if "US" in vari_value:
         ser.write("wifi_connect DHU_5G 12345678\r\n".encode())
-    elif "EU" in vari_value:
-        ser.write("wifi_connect DHU 12345678\r\n".encode())
+    elif "JP" in vari_value:
+        ser.write("wifi_connect DHU_6G 12345678\r\n".encode())
     else:
         ser.write("wifi_connect DHU 12345678\r\n".encode())
     
@@ -365,20 +369,24 @@ def test_cmd_5():
             ser.write("\r\n".encode())
 
 def test_flow():
+    global lemans
     vari_value = get_vari_value()
     dmesg()
-    time.sleep(1)
+    wait_lemans()
+    #readback()
+    
+    op_mode_max()
+    time.sleep(5)
+    lemans = False
+    wait_lemans()
+    time.sleep(5)
+    
+    
     #readback()
     can_echo()
     wait_lemans()
-    time.sleep(1)
     #readback()
-    '''
-    op_mode_max()
-    wait_lemans()
-    readback()
-    time.sleep(2)
-    '''
+    #time.sleep(2)
     usb_mode()
     wait_lemans()
     #readback()
@@ -619,7 +627,7 @@ def create_gui():
     button21 = tk.Button(tab1, text="TEST FLOW", command=test_flow)
     button21.place(x=640, y=310, width=200, height=50)
 
-    button22 = tk.Button(tab1, text="IPERF3 ETH", command=iperf3_s_eth)
+    button22 = tk.Button(tab1, text="RECORD AMP", command=amp_record)
     button22.place(x=850, y=70, width=200, height=50)
 
     button23 = tk.Button(tab1, text="IPERF3 WIFI", command=iperf3_s_wifi)
