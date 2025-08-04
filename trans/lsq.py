@@ -308,7 +308,7 @@ def iperf3_s_wifi():
 def iperf3_s_eth():
     ser.write("iperf3 -s\r\n".encode())
 def op_mode_max():
-    ser.write("Set_OpMode_Max\r\n".encode())
+    ser.write("Set_OpMode_Nrm\r\n".encode())
 def wifi_connect():
     global vari_entry
     vari_value = get_vari_value()
