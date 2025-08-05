@@ -546,7 +546,7 @@ def create_gui():
     # Create the main window
     root = tk.Tk()
     root.title("UART Control")
-    root.geometry("1200x700")  # Set default window size
+    root.geometry("1060x700")  # Set default window size
 
     # Create a style for the Notebook tabs
     style = ttk.Style()
@@ -756,7 +756,7 @@ def create_gui():
     # Create text area for displaying messages
     global text_area
     text_area = ScrolledText(root, height=15, width=113, state=tk.DISABLED)
-    text_area.place(x=10, y=560, width=1180, height=100)
+    text_area.place(x=10, y=560, width=1040, height=100)
 
     root.after(100, process_queue)  # Start processing the queue
 
