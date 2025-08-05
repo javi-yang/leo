@@ -506,26 +506,6 @@ def ser_i2c_dump_command():
     command = "i2cdump -y -f " + input1.get() + " 0x" + input2.get() + "\r\n"
     ser.write(command.encode())
 
-# 在create_gui之前添加如下定义
-filter1_active = False
-filter2_active = False
-
-def toggle_filter1():
-    global filter1_active
-    filter1_active = not filter1_active
-    if filter1_active:
-        filter1_button.config(bg="orange", activebackground="orange")
-    else:
-        filter1_button.config(bg="gray", activebackground="gray")
-
-def toggle_filter2():
-    global filter2_active
-    filter2_active = not filter2_active
-    if filter2_active:
-        filter2_button.config(bg="orange", activebackground="orange")
-    else:
-        filter2_button.config(bg="gray", activebackground="gray")
-
 def create_gui():
     global root
     # Create the main window
