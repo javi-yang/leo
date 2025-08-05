@@ -83,17 +83,8 @@ def wait_lemans():
 def process_queue():
     while not data_queue.empty():
         data = data_queue.get()
-        show = False
-        if filter1_active and filter1_entry.get() in data:
-            show = True
-        if filter2_active and filter2_entry.get() in data:
-            show = True
-        if show:
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            text_area.config(state=tk.NORMAL)
-            text_area.insert(tk.END, f"{timestamp}\n{data}\n")
-            text_area.see(tk.END)
-            text_area.config(state=tk.DISABLED)
+        print(data)
+        #display_message(data)
         if button_reserve.config('bg')[-1] == 'orange':
             with open('/home/javi/leo_share/log.txt', 'a') as log_file:
                 log_file.write(data + '\n')
@@ -511,7 +502,7 @@ def create_gui():
     # Create the main window
     root = tk.Tk()
     root.title("UART Control")
-    root.geometry("1060x700")  # Set default window size
+    root.geometry("1050x700")  # Set default window size
 
     # Create a style for the Notebook tabs
     style = ttk.Style()
@@ -644,22 +635,60 @@ def create_gui():
     interval_button = tk.Button(tab1, text="INTERVAL", command=update_interval_time, bg="gray", activebackground="gray")
     interval_button.place(x=120, y=370, width=100, height=30)
 
-    # 移动Filter1和Filter2输入框及按钮到tag1的interval输入框下面
-    tk.Label(tab1, text="Filter1:").place(x=10, y=410)
-    global filter1_entry
-    filter1_entry = tk.Entry(tab1, width=20)
-    filter1_entry.place(x=100, y=410, width=300, height=30)
-    global filter1_button
-    filter1_button = tk.Button(tab1, text="Enable Filter1", command=toggle_filter1, bg="gray", activebackground="gray")
-    filter1_button.place(x=410, y=410, width=120, height=30)
+    # I2C transit block (tag2)
+    global input1, input2, input3, input4
+    input1 = tk.Entry(tab2, width=10)
+    input1.place(x=10, y=10, width=50, height=30)
 
-    tk.Label(tab1, text="Filter2:").place(x=10, y=450)
-    global filter2_entry
-    filter2_entry = tk.Entry(tab1, width=20)
-    filter2_entry.place(x=100, y=450, width=300, height=30)
-    global filter2_button
-    filter2_button = tk.Button(tab1, text="Enable Filter2", command=toggle_filter2, bg="gray", activebackground="gray")
-    filter2_button.place(x=410, y=450, width=120, height=30)
+    tk.Label(tab2, text="0x").place(x=70, y=14)
+    input2 = tk.Entry(tab2, width=10)
+    input2.place(x=90, y=10, width=50, height=30)
+
+    tk.Label(tab2, text="0x").place(x=150, y=14)
+    input3 = tk.Entry(tab2, width=10)
+    input3.place(x=170, y=10, width=50, height=30)
+
+    tk.Label(tab2, text="0x").place(x=230, y=14)
+    input4 = tk.Entry(tab2, width=10)
+    input4.place(x=250, y=10, width=50, height=30)
+
+    read_button = tk.Button(tab2, text="READ", command=ser_i2c_read_command)
+    read_button.place(x=310, y=10, width=100, height=30)
+
+    send_button = tk.Button(tab2, text="SEND", command=ser_i2c_send_command)
+    send_button.place(x=420, y=10, width=100, height=30)
+
+    dump_button = tk.Button(tab2, text="DUMP", command=ser_i2c_dump_command)
+    dump_button.place(x=530, y=10, width=100, height=30)
+
+    # ETH Address block
+    global eth_address
+    tk.Label(tab2, text="ETH:").place(x=10, y=50)
+    eth_address = tk.Entry(tab2, width=20)
+    eth_address.place(x=100, y=50, width=300, height=30)
+
+    # WIFI Address block
+    global wifi_address
+    tk.Label(tab2, text="WIFI:").place(x=10, y=90)
+    wifi_address = tk.Entry(tab2, width=20)
+    wifi_address.place(x=100, y=90, width=300, height=30)
+
+    # BT Address block
+    global bt_address
+    tk.Label(tab2, text="BT:").place(x=10, y=130)
+    bt_address = tk.Entry(tab2, width=20)
+    bt_address.place(x=100, y=130, width=300, height=30)
+
+    button27 = tk.Button(tab2, text="TEST CMD 1", command=test_cmd_1)
+    button27.place(x=10, y=170, width=200, height=50)
+    button28 = tk.Button(tab2, text="TEST CMD 2", command=test_cmd_2)
+    button28.place(x=220, y=170, width=200, height=50)
+    button29 = tk.Button(tab2, text="TEST CMD 3", command=test_cmd_3)
+    button29.place(x=430, y=170, width=200, height=50)
+    button30 = tk.Button(tab2, text="TEST CMD 4", command=test_cmd_4)
+    button30.place(x=640, y=170, width=200, height=50)
+    button31 = tk.Button(tab2, text="TEST CMD 5", command=test_cmd_5)
+    button31.place(x=850, y=170, width=200, height=50)
 
 
 
