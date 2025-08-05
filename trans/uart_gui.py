@@ -39,6 +39,11 @@ GPIO.setup(7, GPIO.OUT)
 # GPIO.output(7, 1)
 
 
+filter1_active = False
+filter1_text = ""
+filter2_active = False
+filter2_text = ""
+
 interval_time = 0.3
 
 # Create a queue to buffer incoming data
@@ -453,6 +458,28 @@ def toggle_button_reserve():
         with open('/home/javi/leo_share/log.txt', 'a') as log_file:
             log_file.write(data + '\n')
         '''
+def toggle_filter1():
+    global filter1_active, filter1_button, filter1_text
+    if filter1_button.config('bg')[-1] == 'orange':
+        filter1_button.config(bg="gray", activebackground="gray")
+        filter1_active = False
+    else:
+        filter1_button.config(bg="orange", activebackground="orange")
+        filter1_active = True
+        filter1_text = filter1_entry.get()
+
+def toggle_filter2():
+    global filter2_active, filter2_button, filter2_text
+    if filter2_button.config('bg')[-1] == 'orange':
+        filter2_button.config(bg="gray", activebackground="gray")
+        filter2_active = False
+    else:
+        filter2_button.config(bg="orange", activebackground="orange")
+        filter2_active = True
+        filter2_text = filter2_entry.get()
+
+last_messages = []
+current_message_index = -1
 
 def on_enter_click(event=None):
     global last_messages, current_message_index
@@ -485,6 +512,23 @@ def get_vari_value():
     value = vari_entry.get().strip()
     return value if value else "US"
 
+def display_message(message):
+    global filter1_active, filter1_text, filter2_active, filter2_text
+    if filter1_active and filter1_text in message:
+        return
+    if filter2_active and filter2_text not in message:
+        return
+    text_area.config(state=tk.NORMAL)
+    text_area.insert(tk.END, message + "\n")
+    text_area.see(tk.END)
+    
+    # Limit the number of lines to 500
+    lines = text_area.get("1.0", tk.END).split("\n")
+    #if len(lines) > 1000:
+    #    text_area.delete("1.0", "200.0")
+    #print(len(lines))
+    text_area.config(state=tk.DISABLED)
+
 def ser_i2c_read_command():
     command = "i2cget -y -f " + input1.get() + " 0x" + input2.get() + " 0x" + input3.get() + "\r\n"
     ser.write(command.encode())
@@ -498,11 +542,11 @@ def ser_i2c_dump_command():
     ser.write(command.encode())
 
 def create_gui():
-    global root
+    global root, text_area
     # Create the main window
     root = tk.Tk()
     root.title("UART Control")
-    root.geometry("1050x700")  # Set default window size
+    root.geometry("1200x700")  # Set default window size
 
     # Create a style for the Notebook tabs
     style = ttk.Style()
@@ -626,6 +670,22 @@ def create_gui():
     
     enter_button = tk.Button(tab1, text="ENTER", command=on_enter_click)
     enter_button.place(x=620, y=490, width=120, height=30)
+
+    # Create filter1 input field and button
+    global filter1_entry, filter1_button
+    filter1_entry = tk.Entry(tab1)
+    filter1_entry.place(x=10, y=410, width=600, height=30)
+    
+    filter1_button = tk.Button(tab1, text="IGNORE", command=toggle_filter1, bg="gray", activebackground="gray")
+    filter1_button.place(x=620, y=410, width=120, height=30)
+
+    # Create filter2 input field and button
+    global filter2_entry, filter2_button
+    filter2_entry = tk.Entry(tab1)
+    filter2_entry.place(x=10, y=450, width=600, height=30)
+    
+    filter2_button = tk.Button(tab1, text="REMAIN", command=toggle_filter2, bg="gray", activebackground="gray")
+    filter2_button.place(x=620, y=450, width=120, height=30)
 
     # Create interval time input field and button
     global interval_entry
