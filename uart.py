@@ -365,15 +365,19 @@ def test_cmd_3():
             ser.write(line.encode())
             ser.write("\r\n".encode())
 def test_cmd_4():
-    
-    tuner_test()
-    
+
+    ser.write("tunertest_client\r\n".encode())
+    time.sleep(1)
+    ser.write("1\r\n".encode())
+    time.sleep(0.2)
+    ser.write("8\r\n".encode())
+    time.sleep(0.2)
+    ser.write("174928\r\n".encode())
+    time.sleep(2)
     ser.write("8\r\n".encode())
     time.sleep(0.2)
     ser.write("1\r\n".encode())
     time.sleep(0.2)
-    
-    
     
     for _ in range(10):
     
@@ -382,10 +386,25 @@ def test_cmd_4():
         time.sleep(1)
         
 def test_cmd_5():
-    with open('/home/javi/leogit/trans/test_cmd/test_cmd_5.txt', 'r') as f:
-        for line in f.readlines():
-            ser.write(line.encode())
-            ser.write("\r\n".encode())
+
+    ser.write("tunertest_client\r\n".encode())
+    time.sleep(1)
+    ser.write("1\r\n".encode())
+    time.sleep(0.2)
+    ser.write("8\r\n".encode())
+    time.sleep(0.2)
+    ser.write("225648\r\n".encode())
+    time.sleep(2)
+    ser.write("8\r\n".encode())
+    time.sleep(0.2)
+    ser.write("1\r\n".encode())
+    time.sleep(0.2)
+    
+    for _ in range(10):
+    
+        ser.write("5".encode())
+        ser.write("\r\n".encode())
+        time.sleep(1)
 
 def test_flow():
     global lemans
@@ -608,10 +627,10 @@ def create_gui():
     button8 = tk.Button(tab1, text="IPERF3 -S", command=iperf3_s)
     button8.place(x=220, y=130, width=200, height=50)
 
-    button9 = tk.Button(tab1, text="PWER INTRPT", command=power_interrupt)
+    button9 = tk.Button(tab1, text="TEST4", command=test_cmd_4)
     button9.place(x=220, y=190, width=200, height=50)
 
-    button10 = tk.Button(tab1, text="CAN SEND", command=CAN_send)
+    button10 = tk.Button(tab1, text="TEST5", command=test_cmd_5)
     button10.place(x=220, y=250, width=200, height=50)
 
     button11 = tk.Button(tab1, text="WIFI CONNECT", command=wifi_connect)
