@@ -61,8 +61,10 @@ def readback():
             data = ser.readline()
             data = data.strip()
             data = bytes.decode(data, errors="ignore")
-            #data_queue.put(data)
+            
             print(data)
+            if 'fVBer' in data:
+                data_queue.put(data)
             if 'lemans login:' in data:
                 lemans_login()
             elif 'lemans' in data:
@@ -358,10 +360,13 @@ def test_cmd_3():
             ser.write(line.encode())
             ser.write("\r\n".encode())
 def test_cmd_4():
-    with open('/home/javi/leogit/trans/test_cmd/test_cmd_4.txt', 'r') as f:
-        for line in f.readlines():
-            ser.write(line.encode())
-            ser.write("\r\n".encode())
+    
+    for _ in range(10):
+    
+        ser.write("1".encode())
+        ser.write("\r\n".encode())
+        time.sleep(2)
+        
 def test_cmd_5():
     with open('/home/javi/leogit/trans/test_cmd/test_cmd_5.txt', 'r') as f:
         for line in f.readlines():
@@ -524,9 +529,9 @@ def display_message(message):
     
     # Limit the number of lines to 500
     lines = text_area.get("1.0", tk.END).split("\n")
-    #if len(lines) > 1000:
-    #    text_area.delete("1.0", "200.0")
-    #print(len(lines))
+    if len(lines) > 1000:
+        text_area.delete("1.0", "200.0")
+    print(len(lines))
     text_area.config(state=tk.DISABLED)
 
 def ser_i2c_read_command():
