@@ -91,7 +91,7 @@ def process_queue():
     while not data_queue.empty():
         data = data_queue.get()
         print(data)
-        #display_message(data)
+        display_message(data)
         if button_reserve.config('bg')[-1] == 'orange':
             with open('/home/javi/leo_share/log.txt', 'a') as log_file:
                 log_file.write(data + '\n')
@@ -250,6 +250,11 @@ def tuner_test():
         ser.write("8\r\n".encode())
         time.sleep(1)
         ser.write("174928\r\n".encode())
+        
+    elif "XX" in vari_value:
+        ser.write("8\r\n".encode())
+        time.sleep(1)
+        ser.write("225648\r\n".encode())
 
     elif "JP" in vari_value:
         ser.write("1\r\n".encode())
@@ -361,11 +366,20 @@ def test_cmd_3():
             ser.write("\r\n".encode())
 def test_cmd_4():
     
+    tuner_test()
+    
+    ser.write("8\r\n".encode())
+    time.sleep(0.2)
+    ser.write("1\r\n".encode())
+    time.sleep(0.2)
+    
+    
+    
     for _ in range(10):
     
-        ser.write("1".encode())
+        ser.write("5".encode())
         ser.write("\r\n".encode())
-        time.sleep(2)
+        time.sleep(1)
         
 def test_cmd_5():
     with open('/home/javi/leogit/trans/test_cmd/test_cmd_5.txt', 'r') as f:
@@ -531,7 +545,7 @@ def display_message(message):
     lines = text_area.get("1.0", tk.END).split("\n")
     if len(lines) > 1000:
         text_area.delete("1.0", "200.0")
-    print(len(lines))
+    #print(len(lines))
     text_area.config(state=tk.DISABLED)
 
 def ser_i2c_read_command():
