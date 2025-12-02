@@ -302,7 +302,7 @@ def eth_test():
     ser.write("iperf3 -s\r\n".encode())
     '''
 def iperf3_s():
-    ser.write("iperf3 -s & iperf3 -c 192.168.3.7 -p 5202 -t 1000\r\n".encode())
+    ser.write("iperf3 -s\r\n".encode())
 def iperf3_s_wifi():
     ser.write("iperf3 -c 192.168.3.7 -p 5202 -t 1000\r\n".encode())
 def iperf3_s_eth():
