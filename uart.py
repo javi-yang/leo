@@ -36,7 +36,8 @@ GPIO.add_event_detect(channel_2, GPIO.RISING, bouncetime=1000)
 GPIO.add_event_detect(channel_3, GPIO.RISING, bouncetime=1000)
 
 GPIO.setup(7, GPIO.OUT)
-# GPIO.output(7, 1)
+GPIO.setup(35, GPIO.OUT)
+#GPIO.output(35, 1)
 
 
 filter1_active = False
@@ -339,6 +340,13 @@ def func_list():
     with open('/home/javi/leogit/trans/reg/reg_test.txt', 'r') as f:
         for line in f.readlines():
             ser.write(line.encode())
+
+def gpio35_interval():
+    global interval_time
+    time.sleep(interval_time)
+    GPIO.output(35,0)
+    time.sleep(1)
+    GPIO.output(35,1)
 
 def test_cmd_1():
 
@@ -747,7 +755,7 @@ def create_gui():
     button29.place(x=430, y=170, width=200, height=50)
     button30 = tk.Button(tab2, text="TEST CMD 4", command=test_cmd_4)
     button30.place(x=640, y=170, width=200, height=50)
-    button31 = tk.Button(tab2, text="TEST CMD 5", command=test_cmd_5)
+    button31 = tk.Button(tab2, text="TEST CMD 5", command=gpio35_interval)
     button31.place(x=850, y=170, width=200, height=50)
 
 
