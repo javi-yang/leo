@@ -156,11 +156,13 @@ def STOP_aout():
     ser.write("stop_a2b.sh\r\n".encode())
     
 def amp_record():
+    '''
     ser.write("aplay_a2b2.sh > aplay.txt 2>&1 &\r\n".encode())
     wait_lemans()
     #ser.write("reg_a2b_Amp.sh\r\n".encode())
     ser.write("reg_a2b_Amp.sh > reg1.txt 2>&1\r\n".encode())
     wait_lemans()
+    '''
     ser.write("alsaucm -n -b - << EOM\r\n".encode())
     time.sleep(0.5)
     ser.write("open sa8255-adp-star-snd-card\r\n".encode())
@@ -170,7 +172,7 @@ def amp_record():
     ser.write("EOM\r\n".encode())
     wait_lemans()
     time.sleep(2)
-    ser.write("arecord -Dagm:1,103 -f S16_LE -c 2 -r 48000 /home/root/test_amp_record.wav &\r\n".encode())
+    ser.write("arecord -Dagm:1,103 -f S16_LE -c 16 -r 48000 /home/root/test_amp_record.wav &\r\n".encode())
     #time.sleep(0.5)
     '''
     ser.write("\r\n".encode())
@@ -248,18 +250,21 @@ def tuner_test():
     elif "EU" in vari_value:
         ser.write("8\r\n".encode())
         time.sleep(1)
-        ser.write("174928\r\n".encode())
+        ser.write("225648\r\n".encode())
 
     elif "JP" in vari_value:
         ser.write("1\r\n".encode())
         time.sleep(1)
         ser.write("83500\r\n".encode())
 
+
     else:
         ser.write("1\r\n".encode())
         time.sleep(1)
         ser.write("98100\r\n".encode())
 
+    time.sleep(2)
+    ser.write("255\r\n".encode())
 
 
 def aout_amp_1k():
@@ -347,6 +352,7 @@ def gpio35_interval():
     GPIO.output(35,0)
     time.sleep(1)
     GPIO.output(35,1)
+    
 
 def test_cmd_1():
 
